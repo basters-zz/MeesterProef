@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
 
-public class SheepController : MonoBehaviour {
+public class Sheep : MonoBehaviour {
 	private float speed; //movement speed
 	private Vector3 transformZ;
 	private bool isWalking;
@@ -26,7 +26,7 @@ public class SheepController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (isWalking) {
-			Walking ();
+			Walk ();
 			eatTimer -= Time.deltaTime;
 		} else {
 			anim.SetBool ("IsWalking", false);
@@ -35,7 +35,7 @@ public class SheepController : MonoBehaviour {
 			isWalking = false;
 			isEating = true;
 			if (isEating) {
-				StartCoroutine (Eating());
+				StartCoroutine (Eat());
 			}
 		}
 		if(deadSheep == true){
@@ -47,7 +47,7 @@ public class SheepController : MonoBehaviour {
 		}
 
 	}
-	void Walking(){
+	void Walk(){
 		transform.Translate (transformZ = new Vector3 (0, 0, 2) * speed * Time.deltaTime);
 		anim.SetBool("IsWalking", true);
 		Vector3 fwd = transform.TransformDirection (Vector3.forward);
@@ -61,7 +61,7 @@ public class SheepController : MonoBehaviour {
 			}
 		}
 	}
-	IEnumerator Eating(){
+	IEnumerator Eat(){
 		anim.SetBool("IsEating", true);
 		yield return new WaitForSecondsRealtime (5f);
 		anim.SetBool("IsEating", false);

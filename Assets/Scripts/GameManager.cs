@@ -119,7 +119,11 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if(Input.GetAxis("Mouse ScrollWheel") < 0){
-			tmpY.y++;
+			tmpY.y += 0.5f;
+			mainCam.transform.position = tmpY;
+		}
+		if(Input.GetAxis("Mouse ScrollWheel") > 0){
+			tmpY.y -= 0.5f;
 			mainCam.transform.position = tmpY;
 		}
 
