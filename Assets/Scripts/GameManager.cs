@@ -17,13 +17,23 @@ public class GameManager : MonoBehaviour {
 	GameObject mainCam;
 	int e;
 	int[] sheeps1;
+	int totalAnimalSpawn;
+	int totalWolfSpawn;
+	int totalSheepSpawn;
 	bool shiftPressed;
+
 	List<GameObject> sheeplist = new List<GameObject>();
+	List<GameObject> spawnPosList = new List<GameObject>();
+
+
+	[SerializeField]
+	GameObject sheepPrefab;
 	// Use this for initialization
 	void Start () {
 		directionalLight = GameObject.FindGameObjectWithTag ("Sun").transform;
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
+		totalAnimalSpawn = 5;
 
 		sheeps = GameObject.Find ("Sheeps");
 		score = GameObject.Find ("Score");
@@ -33,6 +43,8 @@ public class GameManager : MonoBehaviour {
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		shiftPressed = false;
 		sheeplist.AddRange (GameObject.FindGameObjectsWithTag ("Sheep"));
+		spawnPosList.AddRange (GameObject.FindGameObjectsWithTag ("SpawnPoint"));
+		SpawnAnimals ();
 	}
 	
 	// Update is called once per frame
@@ -46,7 +58,7 @@ public class GameManager : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.R)){
 			KillSheep ();
 		}
-		Debug.Log (sheeplist.Count);
+		Debug.Log (spawnPosList.Count);
 		/*foreach(GameObject sheep in sheeplist){
 			sheep.GetComponent<SheepController>().
 		}*/
@@ -63,6 +75,25 @@ public class GameManager : MonoBehaviour {
 	void CheckWolves(){
 		wolves.GetComponent<InputField> ().text = "Wolves: " + GameObject.FindGameObjectsWithTag ("Wolf").Length.ToString ();
 	}
+
+	void SpawnAnimals(){
+		totalWolfSpawn = totalAnimalSpawn / Random.Range (2, 5);
+		totalSheepSpawn = totalAnimalSpawn - totalWolfSpawn;
+		while (totalSheepSpawn > 0){
+			SpawnSheep();
+			totalSheepSpawn -= 1;
+		}
+		return;
+
+	}
+	void SpawnSheep(){
+		int tempInt = spawnPosList.Count;
+		Transform tempSpawn = spawnPosList[Random.Range(-1, tempInt)].transform;	
+		Quaternion tempRot = Quaternion.Euler (0, Random.Range(-1, 360), 0);
+		Instantiate (sheepPrefab, tempSpawn.position, tempRot);
+	}
+	
+
 	void KillSheep(){
 //		sheeps1 = GameObject.FindGameObjectsWithTag ("Sheep").Length;
 		foreach(GameObject sheep in sheeplist){
@@ -82,6 +113,7 @@ public class GameManager : MonoBehaviour {
 			shiftPressed = false;
 		}
 		if (Input.GetKey (KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
+			SpawnAnimals ();
 			if (!shiftPressed) {
 				tmpXZ.z += 0.1f;
 				transform.position = tmpXZ;

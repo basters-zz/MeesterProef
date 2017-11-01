@@ -10,6 +10,7 @@ TagManager:
   - Wolves
   - Wolf
   - Sun
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

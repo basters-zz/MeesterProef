@@ -11,7 +11,8 @@ public class Sheep : MonoBehaviour {
 	private Animator anim;
 	private float eatTimer;
 	private float deadSheepTimer;
-	public GameObject explosion;
+	[SerializeField]
+	private GameObject explosion;
 	static bool deadSheep;
 	// Use this for initialization
 	void Start () {
