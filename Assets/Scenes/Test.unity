@@ -3433,6 +3433,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a55647f071993d4dbcc5ff2d60b2cbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  centerSpawnArea: {x: 0, y: 0, z: 0}
+  sizeSpawnArea: {x: 0, y: 0, z: 0}
   sheepPrefab: {fileID: 1060168633155474, guid: 390c8ace3765af84e9f7da5e489c4424,
     type: 2}
 --- !u!4 &976549015

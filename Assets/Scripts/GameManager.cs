@@ -8,21 +8,35 @@ public class GameManager : MonoBehaviour {
 	float cycleMins;
 	float cycleCalc;
 	Transform directionalLight;
-	//public bool enemySpawn;
+
+	//Onscreen information
 	GameObject score;
 	GameObject sheeps;
 	GameObject wolves;
 	GameObject days;
+
+	//The sun
 	GameObject DirectionalLight;
+
 	GameObject mainCam;
-	int e;
-	int[] sheeps1;
+
+	//These variables are used to figure out how many of each animal should be spawned
 	int totalAnimalSpawn;
 	int totalWolfSpawn;
 	int totalSheepSpawn;
+
+	//This boolean checks if shift is pressed so the camera moves faster
 	bool shiftPressed;
 
-	List<GameObject> sheeplist = new List<GameObject>();
+	//The local position of the spawn area
+	private Vector3 centerSpawnArea;
+
+	//The actual size of the spawn area
+	private Vector3 sizeSpawnArea;
+	//Declares the final position to spawn a animal at
+	private Vector3 spawnPosition;
+
+
 	List<GameObject> spawnPosList = new List<GameObject>();
 
 
@@ -30,6 +44,8 @@ public class GameManager : MonoBehaviour {
 	GameObject sheepPrefab;
 	// Use this for initialization
 	void Start () {
+		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
+		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
 		directionalLight = GameObject.FindGameObjectWithTag ("Sun").transform;
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
@@ -42,7 +58,7 @@ public class GameManager : MonoBehaviour {
 		DirectionalLight = GameObject.FindGameObjectWithTag ("Sun");
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		shiftPressed = false;
-		sheeplist.AddRange (GameObject.FindGameObjectsWithTag ("Sheep"));
+
 		spawnPosList.AddRange (GameObject.FindGameObjectsWithTag ("SpawnPoint"));
 		SpawnAnimals ();
 	}
@@ -51,57 +67,45 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 
 		CameraController ();
-		CheckSheep ();
-		CheckWolves ();
+		OnScreenDisplay ();
 		DayNightCycle ();
 
-		if(Input.GetKeyDown(KeyCode.R)){
-			KillSheep ();
-		}
 		Debug.Log (spawnPosList.Count);
-		/*foreach(GameObject sheep in sheeplist){
-			sheep.GetComponent<SheepController>().
-		}*/
 	}
 
 	void DayNightCycle(){
 		directionalLight.Rotate(cycleCalc, 0, 0);
 	}
-
-	void CheckSheep(){
+	//Check how many animals are left and display it on screen
+	void OnScreenDisplay(){
 		sheeps.GetComponent<InputField> ().text = "Sheep: " + GameObject.FindGameObjectsWithTag ("Sheep").Length.ToString ();
-
-	}
-	void CheckWolves(){
 		wolves.GetComponent<InputField> ().text = "Wolves: " + GameObject.FindGameObjectsWithTag ("Wolf").Length.ToString ();
 	}
 
+	//Spawn animals
 	void SpawnAnimals(){
 		totalWolfSpawn = totalAnimalSpawn / Random.Range (2, 5);
 		totalSheepSpawn = totalAnimalSpawn - totalWolfSpawn;
 		while (totalSheepSpawn > 0){
+			ChangeSpawnPos ();
 			SpawnSheep();
 			totalSheepSpawn -= 1;
 		}
 		return;
 
 	}
-	void SpawnSheep(){
+	//Chage spawn position of the animals
+	void ChangeSpawnPos(){
+		spawnPosition = centerSpawnArea + new Vector3 (Random.Range(-sizeSpawnArea.x / 2, sizeSpawnArea.x / 2),Random.Range(-sizeSpawnArea.y / 2, sizeSpawnArea.y / 2),Random.Range(-sizeSpawnArea.z / 2, sizeSpawnArea.z / 2));
+	}
+	//Spawn a sheep
+	public void SpawnSheep(){
 		int tempInt = spawnPosList.Count;
-		Transform tempSpawn = spawnPosList[Random.Range(-1, tempInt)].transform;	
 		Quaternion tempRot = Quaternion.Euler (0, Random.Range(-1, 360), 0);
-		Instantiate (sheepPrefab, tempSpawn.position, tempRot);
+		Instantiate (sheepPrefab, spawnPosition, tempRot);
 	}
 	
 
-	void KillSheep(){
-//		sheeps1 = GameObject.FindGameObjectsWithTag ("Sheep").Length;
-		foreach(GameObject sheep in sheeplist){
-			e = e + Random.Range (0, 3);
-			Debug.Log (e);
-		}
-		Debug.Log ("e: " + e);
-	}
 
 	void CameraController(){
 		Vector3 tmpXZ = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
@@ -160,5 +164,11 @@ public class GameManager : MonoBehaviour {
 		}
 
 
+	}
+
+	//Build Spawn Area
+	void OnDrawGizmosSelected(){
+		Gizmos.color = new Color (1,0,0.5f,0.4f);
+		Gizmos.DrawCube (centerSpawnArea, sizeSpawnArea);
 	}
 }
