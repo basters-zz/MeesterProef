@@ -12,6 +12,7 @@ TagManager:
   - Sun
   - SpawnPoint
   - SpawnArea
+  - NightPanel
   layers:
   - Default
   - TransparentFX

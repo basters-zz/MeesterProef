@@ -13,7 +13,6 @@ public class Animal : MonoBehaviour {
 	[SerializeField]
 	private GameObject explosion; //Gets declared in the inspector
 	// Use this for initialization
-	// Use this for initialization
 	void Start () {
 		speed = 3f; //declare the actual speed
 		isWalking = true;
