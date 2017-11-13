@@ -42,9 +42,9 @@ public class GameManager : MonoBehaviour {
 	bool endDay;
 
 	//These variables are used to figure out how many of each animal should be spawned
-	int totalAnimalSpawn;
-	int totalWolfSpawn;
-	int totalSheepSpawn;
+	float totalAnimalSpawn;
+	float totalWolfSpawn;
+	float totalSheepSpawn;
 
 	//This boolean checks if shift is pressed so the camera moves faster
 	bool shiftPressed;
@@ -58,8 +58,6 @@ public class GameManager : MonoBehaviour {
 	private Vector3 spawnPosition;
 
 
-	List<GameObject> spawnPosList = new List<GameObject>();
-
 
 	[SerializeField]
 	GameObject sheepPrefab;
@@ -69,7 +67,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
 		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
-		totalDayCount = 0;
+		totalDayCount = -1;
 		totalDayCountScoreMultiplier = 0;
 		totalSheepCountScore = 0;
 		totalWolfCountScore = 0;
@@ -78,7 +76,7 @@ public class GameManager : MonoBehaviour {
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
 		nightCountDown = 5.0f;
-		totalAnimalSpawn = 5;
+		totalAnimalSpawn = 8;
 		nightTimer = 5;
 		dayTimer = 5;
 		startRotDirectionalLight = new Vector3 (0, -30, -1.525f);
@@ -93,18 +91,14 @@ public class GameManager : MonoBehaviour {
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		shiftPressed = false;
-
-		spawnPosList.AddRange (GameObject.FindGameObjectsWithTag ("SpawnPoint"));
 		SpawnAnimals ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
 		CameraController ();
 		OnScreenDisplay ();
 		DayNightSwitch ();
-		Debug.Log (spawnPosList.Count);
 		CalculateScore ();
 
 	}
@@ -182,6 +176,7 @@ public class GameManager : MonoBehaviour {
 		totalWolfSpawn = totalAnimalSpawn / Random.Range (2, 5);
 		totalSheepSpawn = totalAnimalSpawn - totalWolfSpawn;
 		totalDayCount += 1;
+		totalAnimalSpawn = Mathf.Round(totalAnimalSpawn * 1.25f);
 
 		while (totalSheepSpawn > 0){
 			ChangeSpawnPos ();
@@ -200,16 +195,15 @@ public class GameManager : MonoBehaviour {
 	//Chage spawn position of the animals
 	void ChangeSpawnPos(){
 		spawnPosition = centerSpawnArea + new Vector3 (Random.Range(-sizeSpawnArea.x / 2, sizeSpawnArea.x / 2),Random.Range(-sizeSpawnArea.y / 2, sizeSpawnArea.y / 2),Random.Range(-sizeSpawnArea.z / 2, sizeSpawnArea.z / 2));
+		spawnPosition.y += 3.1f;
 	}
 	//Spawn a sheep
 	public void SpawnSheep(){
-		int tempInt = spawnPosList.Count;
 		Quaternion tempRot = Quaternion.Euler (0, Random.Range(-1, 360), 0);
 		Instantiate (sheepPrefab, spawnPosition, tempRot);
 	}
 	//Spawn a wolf
 	public void SpawnWolf(){
-		int tempInt = spawnPosList.Count;
 		Quaternion tempRot = Quaternion.Euler (0, Random.Range(-1, 360), 0);
 		Instantiate (wolfPrefab, spawnPosition, tempRot);
 	}
