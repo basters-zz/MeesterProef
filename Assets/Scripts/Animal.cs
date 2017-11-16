@@ -61,7 +61,7 @@ public class Animal : MonoBehaviour {
 		RaycastHit hit;
 
 		Debug.DrawRay (transform.position, fwd * 3, Color.red);
-		if (Physics.Raycast (transform.position, fwd, out hit, 3)) {
+		if (Physics.Raycast (transform.position, fwd,out hit, 3)) {
 			if (hit.collider.tag == "Walls" || hit.collider.tag == "Sheep") {
 				int randomint = Random.Range (0, 360);
 				transform.Rotate (0, randomint, 0);

@@ -13,6 +13,9 @@ TagManager:
   - SpawnPoint
   - SpawnArea
   - NightPanel
+  - HS1
+  - HS2
+  - HS3
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class GameManager : MonoBehaviour {
 	float cycleMins;
@@ -107,6 +109,28 @@ public class GameManager : MonoBehaviour {
 		directionalLight.Rotate(cycleCalc, 0, 0);
 		nightCountDown -= Time.deltaTime;
 	}
+		
+	public void SaveData(){
+		BinaryFormatter binary = new BinaryFormatter ();
+		FileStream fStream = File.Create (Application.persistentDataPath + "/SaveFile.bas");
+
+		SaveManager Save = new SaveManager ();
+		if (totalScore > Save.Score1) {
+			Save.Score3 = Save.Score2;
+			Save.Score2 = Save.Score1;
+			Save.Score1 = totalScore;
+		} else if (totalScore > Save.Score2 && totalScore < Save.Score1) {
+			Save.Score3 = Save.Score2;
+			Save.Score2 = totalScore;
+		} else if (totalScore > Save.Score3 && totalScore < Save.Score2) {
+			Save.Score3 = totalScore;
+		} else {
+			//do nothing
+		}
+		binary.Serialize (fStream, Save);
+		fStream.Close ();
+	}
+		
 
 	void DayNightSwitch(){
 
@@ -129,9 +153,7 @@ public class GameManager : MonoBehaviour {
 			endDay = false;
 			startDay = true;
 			dayTimer -= Time.deltaTime;
-		} /*else {
-			startDay = false;
-		}*/
+		}
 
 		//Start making it day again
 		if(dayTimer > 0 && startDay == true){
@@ -142,6 +164,7 @@ public class GameManager : MonoBehaviour {
 		} else	if(dayTimer <= 0){
 			nightCountDown = 300f;
 			SpawnAnimals ();
+			SaveData ();
 			startDay = false;
 
 		}
@@ -168,7 +191,6 @@ public class GameManager : MonoBehaviour {
 		totalWolfCountScore = GameObject.FindGameObjectsWithTag ("Wolf").Length * 2;
 		totalAnimalCountScore = totalSheepCountScore - totalWolfCountScore;
 		totalScore = totalDayCountScoreMultiplier * totalAnimalCountScore;
-		Debug.Log ("Total Score: " + totalScore);
 	}
 
 	//Spawn animals
@@ -219,7 +241,7 @@ public class GameManager : MonoBehaviour {
 		else{
 			shiftPressed = false;
 		}
-		if (Input.GetKey (KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) {
+		if ((Input.GetKey (KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && mainCam.transform.position.z < 397.7f) {
 			if (!shiftPressed) {
 				tmpXZ.z += 0.1f;
 				mainCam.transform.position = tmpXZ;
@@ -228,7 +250,7 @@ public class GameManager : MonoBehaviour {
 				mainCam.transform.position = tmpXZ;
 			}
 		}
-		if (Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) {
+		if ((Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && mainCam.transform.localPosition.z > 100.8f) {
 			if (!shiftPressed) {
 				tmpXZ.x -= 0.1f;
 				mainCam.transform.position = tmpXZ;
@@ -237,7 +259,7 @@ public class GameManager : MonoBehaviour {
 				mainCam.transform.position = tmpXZ;
 			}
 		}
-		if (Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
+		if ((Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && mainCam.transform.localPosition.z < 389.8f) {
 			if (!shiftPressed) {
 				tmpXZ.x += 0.1f;
 				mainCam.transform.position = tmpXZ;
@@ -246,7 +268,7 @@ public class GameManager : MonoBehaviour {
 				mainCam.transform.position = tmpXZ;
 			}
 		}
-		if (Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) {
+		if ((Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && mainCam.transform.localPosition.z > 89.44f) {
 			if (!shiftPressed) {
 				tmpXZ.z -= 0.1f;
 				mainCam.transform.position = tmpXZ;
@@ -256,11 +278,11 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		if(Input.GetAxis("Mouse ScrollWheel") < 0){
+		if((Input.GetAxis("Mouse ScrollWheel") < 0) && mainCam.transform.localPosition.y < 31.3f){
 			tmpY.y += 0.5f;
 			mainCam.transform.position = tmpY;
 		}
-		if(Input.GetAxis("Mouse ScrollWheel") > 0){
+		if((Input.GetAxis("Mouse ScrollWheel") > 0) && mainCam.transform.localPosition.y > 7f){
 			tmpY.y -= 0.5f;
 			mainCam.transform.position = tmpY;
 		}
@@ -273,4 +295,5 @@ public class GameManager : MonoBehaviour {
 		Gizmos.color = new Color (1,0,0.5f,0.4f);
 		Gizmos.DrawCube (centerSpawnArea, sizeSpawnArea);
 	}
+
 }

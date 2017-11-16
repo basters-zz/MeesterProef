@@ -54,7 +54,10 @@
      <Compile Include="Assets\Scripts\Animal.cs" />
      <Compile Include="Assets\Scripts\Credits.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\HighScores.cs" />
+     <Compile Include="Assets\Scripts\LoadManager.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
+     <Compile Include="Assets\Scripts\SaveManager.cs" />
      <Compile Include="Assets\Scripts\Sheep.cs" />
      <Compile Include="Assets\Scripts\Wolf.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
