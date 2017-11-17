@@ -4,15 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 	float cycleMins;
 	float cycleCalc;
-	[SerializeField]
 	float nightCountDown;
-	[SerializeField]
 	float nightTimer; //How long the night takes
-	[SerializeField]
 	float dayTimer; // How long it takes to make it day time again
 
 	float totalDayCount;
@@ -30,18 +28,20 @@ public class GameManager : MonoBehaviour {
 	GameObject sheeps;
 	GameObject wolves;
 	GameObject days;
-
-	//The sun
-	GameObject DirectionalLight;
+	GameObject deathScreen;
+	GameObject pauseScreen;
+	GameObject skipDayScreen;
 
 	GameObject mainCam;
 
 	GameObject nightSwitchPanel;
 	Color colorNightSwitch;
-	[SerializeField]
 	bool startDay;
-	[SerializeField]
 	bool endDay;
+
+
+
+	bool gamePaused;
 
 	//These variables are used to figure out how many of each animal should be spawned
 	float totalAnimalSpawn;
@@ -61,15 +61,22 @@ public class GameManager : MonoBehaviour {
 
 
 
-	[SerializeField]
+
 	GameObject sheepPrefab;
-	[SerializeField]
 	GameObject wolfPrefab;
 	// Use this for initialization
 	void Start () {
+		sheepPrefab = Resources.Load ("Prefabs/Sheep") as GameObject;
+		wolfPrefab = Resources.Load ("Prefabs/Wolf") as GameObject;
+		deathScreen = GameObject.FindGameObjectWithTag ("DeathScreen");
+		pauseScreen = GameObject.FindGameObjectWithTag ("PauseScreen");
+		skipDayScreen = GameObject.FindGameObjectWithTag ("SkipDay");
+		deathScreen.SetActive (false);
+		pauseScreen.SetActive (false);
+		skipDayScreen.SetActive (false);
 		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
 		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
-		totalDayCount = -1;
+		totalDayCount = 0;
 		totalDayCountScoreMultiplier = 0;
 		totalSheepCountScore = 0;
 		totalWolfCountScore = 0;
@@ -77,7 +84,7 @@ public class GameManager : MonoBehaviour {
 		directionalLight = GameObject.FindGameObjectWithTag ("Sun").transform;
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
-		nightCountDown = 5.0f;
+		nightCountDown = 300f;
 		totalAnimalSpawn = 8;
 		nightTimer = 5;
 		dayTimer = 5;
@@ -86,8 +93,8 @@ public class GameManager : MonoBehaviour {
 		score = GameObject.Find ("Score");
 		wolves = GameObject.Find ("Wolves");
 		days = GameObject.Find ("Days");
-		DirectionalLight = GameObject.FindGameObjectWithTag ("Sun");
 		nightSwitchPanel = GameObject.FindGameObjectWithTag ("NightPanel");
+		gamePaused = false;
 		startDay = false;
 		endDay = false;
 		colorNightSwitch = new Color (0,0,0,0);
@@ -102,12 +109,112 @@ public class GameManager : MonoBehaviour {
 		OnScreenDisplay ();
 		DayNightSwitch ();
 		CalculateScore ();
+		CheckDaySkippable ();
+		Pause ();
+		Debug.Log ("CycleMins: " + cycleMins + "   NightCountdown: " + nightCountDown);
+	}
+
+	void CheckDaySkippable(){
+		List<GameObject> wolvesAlive = new List<GameObject>();
+		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
+		if (wolvesAlive.Count == 0 && !endDay && !startDay) {
+			skipDayScreen.SetActive (true);
+		} else {
+			skipDayScreen.SetActive (false);
+		}
+	}
+		
+
+	void DefeatChecker(){
+		List<GameObject> wolvesAlive = new List<GameObject>();
+		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
+
+		List<GameObject> sheepsAlive = new List<GameObject>();
+		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
+
+		if(wolvesAlive.Count > sheepsAlive.Count && Mathf.Min(wolvesAlive.Count, sheepsAlive.Count) > 25 || sheepsAlive.Count < 0){
+			SaveData ();
+			gamePaused = true;
+			Time.timeScale = 0;
+			AnimalClickable ();
+			deathScreen.SetActive (enabled);
+
+		}
 
 	}
 
+	void DayTimeCalculator(){
+		List<GameObject> wolvesAlive = new List<GameObject>();
+		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
+		float extraSeconds = 0;
+		float extraMinutesCycle = 0;
+		foreach (GameObject LivingWolf in wolvesAlive) {
+			extraSeconds += 4;
+			extraMinutesCycle += 0.133f;
+		}
+		cycleMins = 10f + extraMinutesCycle;
+		nightCountDown = 300 + extraSeconds;
+		return;
+	}
+
+
+	public void ResumeGame(){
+		pauseScreen.SetActive (false);
+		gamePaused = false;
+		AnimalClickable ();
+		Time.timeScale = 1;
+	}
+	void AnimalClickable(){
+		List<GameObject> wolvesAlive = new List<GameObject>();
+		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
+
+		List<GameObject> sheepsAlive = new List<GameObject>();
+		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
+		if (gamePaused) {
+			foreach (GameObject LivingSheep in sheepsAlive) {
+				LivingSheep.GetComponent<BoxCollider> ().enabled = false;
+			}
+			foreach (GameObject LivingWolf in wolvesAlive) {
+				LivingWolf.GetComponent<BoxCollider> ().enabled = false;
+			}
+		}
+		if (!gamePaused) {
+			foreach (GameObject LivingSheep in sheepsAlive) {
+				LivingSheep.GetComponent<BoxCollider> ().enabled = true;
+			}
+			foreach (GameObject LivingWolf in wolvesAlive) {
+				LivingWolf.GetComponent<BoxCollider> ().enabled = true;
+			}
+		}
+		return;
+	}
+
+	void Pause(){
+		if(Input.GetKeyDown(KeyCode.Escape)){
+			pauseScreen.SetActive(true);
+			gamePaused = true;
+			AnimalClickable ();
+			Time.timeScale = 0;
+
+		}
+	}
+
+	public void Restart(){
+		SaveData ();
+		Time.timeScale = 1;
+		SceneManager.LoadScene ("GameScene");
+
+	}
+	public void MainMenu(){
+		SaveData ();
+		Time.timeScale = 1;
+		SceneManager.LoadScene ("MainMenu");
+	}
 	void DayNightCycle(){
-		directionalLight.Rotate(cycleCalc, 0, 0);
-		nightCountDown -= Time.deltaTime;
+		if (!gamePaused) {
+			directionalLight.Rotate (cycleCalc, 0, 0);
+			nightCountDown -= Time.deltaTime;
+		}
 	}
 		
 	public void SaveData(){
@@ -130,52 +237,83 @@ public class GameManager : MonoBehaviour {
 		binary.Serialize (fStream, Save);
 		fStream.Close ();
 	}
-		
+	public void SkipDay(){
+		nightCountDown = 0;
+	}
 
 	void DayNightSwitch(){
-
-		if (nightCountDown > 0f) {
-			DayNightCycle ();
-			endDay = false;
-			if(dayTimer != 5f){
-				dayTimer = 5f;
-			}if(nightTimer != 5f){
-				nightTimer = 5f;
+		if (!gamePaused) {
+			if (nightCountDown > 0f) {
+				DayNightCycle ();
+				endDay = false;
+				if (dayTimer != 5f) {
+					dayTimer = 5f;
+				}
+				if (nightTimer != 5f) {
+					nightTimer = 5f;
+				}
+			} else if (nightCountDown <= 0f && startDay != true) {
+				endDay = true;
+				nightTimer -= Time.deltaTime;
 			}
-		}
-		else if(nightCountDown <= 0f && startDay != true){
-			endDay = true;
-			nightTimer -= Time.deltaTime;
-		}
 
-		if (nightTimer <= 0) {
+			if (nightTimer <= 0) {
 			
-			endDay = false;
-			startDay = true;
-			dayTimer -= Time.deltaTime;
+				endDay = false;
+				startDay = true;
+				dayTimer -= Time.deltaTime;
+			}
+
+			//Start making it day again
+			if (dayTimer > 0 && startDay == true) {
+
+
+				directionalLight.rotation = Quaternion.Euler (startRotDirectionalLight);
+
+			} else if (dayTimer <= 0) {
+				SaveData ();
+				totalDayCount += 1;
+				RemoveSheep ();
+				DefeatChecker ();
+				DayTimeCalculator ();
+				SpawnAnimals ();
+				startDay = false;
+
+			}
+
+			if (startDay == true) {
+				colorNightSwitch.a -= 0.025f;
+				nightSwitchPanel.GetComponent<Image> ().color = colorNightSwitch;
+			} else if (endDay == true) {
+				colorNightSwitch.a += 0.025f;
+				nightSwitchPanel.GetComponent<Image> ().color = colorNightSwitch;
+			} 
 		}
 
-		//Start making it day again
-		if(dayTimer > 0 && startDay == true){
+	}
 
+	void RemoveSheep(){
+		List<GameObject> wolvesAlive = new List<GameObject>();
+		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
 
-			directionalLight.rotation = Quaternion.Euler(startRotDirectionalLight);
+		List<GameObject> sheepsAlive = new List<GameObject>();
+		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
 
-		} else	if(dayTimer <= 0){
-			nightCountDown = 300f;
-			SpawnAnimals ();
-			SaveData ();
-			startDay = false;
+		int sheepsToKill = 0;
 
+		foreach(GameObject WolfAlive in wolvesAlive){
+			sheepsToKill += WolfAlive.GetComponent<Wolf>().KillAmount;
 		}
 
-		if (startDay == true) {
-			colorNightSwitch.a -= 0.025f;
-			nightSwitchPanel.GetComponent<Image> ().color = colorNightSwitch;
-		} else if (endDay == true) {
-			colorNightSwitch.a += 0.025f;
-			nightSwitchPanel.GetComponent<Image> ().color = colorNightSwitch;
-		} 
+		while(sheepsToKill > 0){
+			if(sheepsAlive.Count >= 1){
+			Destroy (GameObject.FindGameObjectWithTag("Sheep"));
+			}
+			sheepsToKill -= 1;
+		}
+
+		return;
+
 
 	}
 	//Check how many animals are left and display it on screen
@@ -197,7 +335,6 @@ public class GameManager : MonoBehaviour {
 	void SpawnAnimals(){
 		totalWolfSpawn = totalAnimalSpawn / Random.Range (2, 5);
 		totalSheepSpawn = totalAnimalSpawn - totalWolfSpawn;
-		totalDayCount += 1;
 		totalAnimalSpawn = Mathf.Round(totalAnimalSpawn * 1.25f);
 
 		while (totalSheepSpawn > 0){
@@ -205,7 +342,6 @@ public class GameManager : MonoBehaviour {
 			SpawnSheep();
 			totalSheepSpawn -= 1;
 		}
-		//return;
 		while (totalWolfSpawn > 0){
 			ChangeSpawnPos ();
 			SpawnWolf();
@@ -235,58 +371,58 @@ public class GameManager : MonoBehaviour {
 	void CameraController(){
 		Vector3 tmpXZ = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z);
 		Vector3 tmpY = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z);
-		if (Input.GetKey (KeyCode.LeftShift)) {
-			shiftPressed = true;
-		}
-		else{
-			shiftPressed = false;
-		}
-		if ((Input.GetKey (KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && mainCam.transform.position.z < 397.7f) {
-			if (!shiftPressed) {
-				tmpXZ.z += 0.1f;
-				mainCam.transform.position = tmpXZ;
+		if (!gamePaused) {
+			if (Input.GetKey (KeyCode.LeftShift)) {
+				shiftPressed = true;
 			} else {
-				tmpXZ.z += 0.3f;
-				mainCam.transform.position = tmpXZ;
+				shiftPressed = false;
 			}
-		}
-		if ((Input.GetKey (KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && mainCam.transform.localPosition.z > 100.8f) {
-			if (!shiftPressed) {
-				tmpXZ.x -= 0.1f;
-				mainCam.transform.position = tmpXZ;
-			} else {
-				tmpXZ.x -= 0.3f;
-				mainCam.transform.position = tmpXZ;
+			if ((Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) && mainCam.transform.position.z < 397.7f) {
+				if (!shiftPressed) {
+					tmpXZ.z += 0.1f;
+					mainCam.transform.position = tmpXZ;
+				} else {
+					tmpXZ.z += 0.3f;
+					mainCam.transform.position = tmpXZ;
+				}
 			}
-		}
-		if ((Input.GetKey (KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && mainCam.transform.localPosition.z < 389.8f) {
-			if (!shiftPressed) {
-				tmpXZ.x += 0.1f;
-				mainCam.transform.position = tmpXZ;
-			} else {
-				tmpXZ.x += 0.3f;
-				mainCam.transform.position = tmpXZ;
+			if ((Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) && mainCam.transform.localPosition.x > 100.8f) {
+				if (!shiftPressed) {
+					tmpXZ.x -= 0.1f;
+					mainCam.transform.position = tmpXZ;
+				} else {
+					tmpXZ.x -= 0.3f;
+					mainCam.transform.position = tmpXZ;
+				}
 			}
-		}
-		if ((Input.GetKey (KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && mainCam.transform.localPosition.z > 89.44f) {
-			if (!shiftPressed) {
-				tmpXZ.z -= 0.1f;
-				mainCam.transform.position = tmpXZ;
-			} else {
-				tmpXZ.z -= 0.3f;
-				mainCam.transform.position = tmpXZ;
+			if ((Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) && mainCam.transform.localPosition.x < 389.8f) {
+				if (!shiftPressed) {
+					tmpXZ.x += 0.1f;
+					mainCam.transform.position = tmpXZ;
+				} else {
+					tmpXZ.x += 0.3f;
+					mainCam.transform.position = tmpXZ;
+				}
 			}
-		}
+			if ((Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow)) && mainCam.transform.localPosition.z > 89.44f) {
+				if (!shiftPressed) {
+					tmpXZ.z -= 0.1f;
+					mainCam.transform.position = tmpXZ;
+				} else {
+					tmpXZ.z -= 0.3f;
+					mainCam.transform.position = tmpXZ;
+				}
+			}
 
-		if((Input.GetAxis("Mouse ScrollWheel") < 0) && mainCam.transform.localPosition.y < 31.3f){
-			tmpY.y += 0.5f;
-			mainCam.transform.position = tmpY;
+			if ((Input.GetAxis ("Mouse ScrollWheel") < 0) && mainCam.transform.localPosition.y < 31.3f) {
+				tmpY.y += 0.5f;
+				mainCam.transform.position = tmpY;
+			}
+			if ((Input.GetAxis ("Mouse ScrollWheel") > 0) && mainCam.transform.localPosition.y > 7f) {
+				tmpY.y -= 0.5f;
+				mainCam.transform.position = tmpY;
+			}
 		}
-		if((Input.GetAxis("Mouse ScrollWheel") > 0) && mainCam.transform.localPosition.y > 7f){
-			tmpY.y -= 0.5f;
-			mainCam.transform.position = tmpY;
-		}
-
 
 	}
 

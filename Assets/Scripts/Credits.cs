@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Credits : MonoBehaviour {
 
 	// Use this for initialization
@@ -15,6 +15,6 @@ public class Credits : MonoBehaviour {
 	}
 
 	public void ToMainMenu(){
-		Application.LoadLevel (0);
+		SceneManager.LoadScene ("MainMenu");
 	}
 }

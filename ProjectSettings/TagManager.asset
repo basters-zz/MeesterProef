@@ -16,6 +16,10 @@ TagManager:
   - HS1
   - HS2
   - HS3
+  - PukeSpawn
+  - PauseScreen
+  - DeathScreen
+  - SkipDay
   layers:
   - Default
   - TransparentFX

@@ -5,25 +5,39 @@ using UnityEngine;
 public class Sheep : Animal {
 	private float peeTimer;
 	private float sleepTimer;
+	private float bleatTimer;
+	private AudioClip bleatSound;
 
 	void Start(){
 		StartAnimal ();
+		bleatSound = Resources.Load("Audio/SheepBleat")as AudioClip;
 		peeTimer = Random.Range (20, 40);
 		sleepTimer = Random.Range (40, 60);
+		bleatTimer = Random.Range (14, 40);
 	}
 	void Update(){
 		UpdateAnimal ();
 		if(IsWalking){
 			peeTimer -= Time.deltaTime;
 			sleepTimer -= Time.deltaTime;
+			bleatTimer -= Time.deltaTime;
 		}
 		if(peeTimer <= 0){
 			StartCoroutine(PeeSheep ());
 		}
 		if(sleepTimer <= 0 || Input.GetKeyDown(KeyCode.P)){
 			StartCoroutine(SheepSleep ());
-
 		}
+		if(bleatTimer <= 0 || Input.GetKeyDown(KeyCode.B)){
+			BleatSheep ();
+		}
+	}
+
+	void BleatSheep(){
+		AudioSourceAnimal.clip = bleatSound;
+		AudioSourceAnimal.Play ();
+		bleatTimer = Random.Range (14, 40);
+
 	}
 
 	IEnumerator PeeSheep(){

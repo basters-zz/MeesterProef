@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 114907374162140308}
   - component: {fileID: 82861107536528926}
   m_Layer: 0
-  m_Name: PlasmaExplosionEffect
+  m_Name: PlasmaExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

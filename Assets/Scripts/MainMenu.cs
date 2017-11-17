@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
@@ -15,13 +16,13 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	public void StartGame(){
-		Application.LoadLevel (1);
+		SceneManager.LoadScene ("GameScene");
 	}
 	public void HighScore(){
-		Application.LoadLevel (2);
+		SceneManager.LoadScene ("Highscore");
 	}
 	public void Credits(){
-		Application.LoadLevel (3);
+		SceneManager.LoadScene ("Credits");
 	}
 	public void QuitGame(){
 		Application.Quit();

@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine.UI;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class HighScores : MonoBehaviour {
 	GameObject highScore1;
@@ -33,6 +34,6 @@ public class HighScores : MonoBehaviour {
 	}
 
 	public void GoToMain(){
-		Application.LoadLevel ("MainMenu");
+		SceneManager.LoadScene ("MainMenu");
 	}
 }
