@@ -1,15 +1,15 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MainMenu.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\GameManager.cs" Line="205" Column="35" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="122" Column="22" />
       <File FileName="Assets\Scripts\MainMenu.cs" Line="25" Column="1" />
       <File FileName="Assets\Scripts\Credits.cs" Line="18" Column="39" />
-      <File FileName="Assets\Scripts\Sheep.cs" Line="13" Column="4" />
-      <File FileName="Assets\Scripts\Animal.cs" Line="19" Column="38" />
-      <File FileName="Assets\Scripts\Wolf.cs" Line="88" Column="98" />
+      <File FileName="Assets\Scripts\Sheep.cs" Line="21" Column="23" />
+      <File FileName="Assets\Scripts\Animal.cs" Line="66" Column="3" />
+      <File FileName="Assets\Scripts\Wolf.cs" Line="38" Column="23" />
       <File FileName="Assets\Scripts\SaveManager.cs" Line="28" Column="13" />
-      <File FileName="Assets\Scripts\HighScores.cs" Line="37" Column="3" />
+      <File FileName="Assets\Scripts\HighScores.cs" Line="32" Column="79" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -90,4 +90,17 @@ public class Animal : MonoBehaviour {
 		Instantiate(explosion, transform.position, transform.rotation);
 		Destroy(gameObject);
 	}
+	IEnumerator Puke(){
+		yield return 0;	
+	}
+	void MakeSound(){
+		//
+	}
+	IEnumerator Sleep(){
+		yield return 0;
+	}
+	IEnumerator Pee(){
+		yield return 0;
+	}
+
 }

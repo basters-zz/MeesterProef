@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+
 
 public class Wolf : Animal {
 	private float peeTimer;
 	private float sleepTimer;
 	private float pukeTimer;
-	private float barkTimer;
+	private float soundTimer;
 	private int killAmount;
 	private AudioClip barkSound;
 	private AudioClip pukeSound;
@@ -24,7 +24,7 @@ public class Wolf : Animal {
 		peeTimer = Random.Range (20, 40);
 		sleepTimer = Random.Range (50, 60);
 		pukeTimer = Random.Range (41, 49);
-		barkTimer = Random.Range (14, 40);
+		soundTimer = Random.Range (14, 40);
 
 	}
 	public int KillAmount{
@@ -38,31 +38,31 @@ public class Wolf : Animal {
 			peeTimer -= Time.deltaTime;
 			sleepTimer -= Time.deltaTime;
 			pukeTimer -= Time.deltaTime;
-			barkTimer -= Time.deltaTime;
+			soundTimer -= Time.deltaTime;
 		}
 		if(peeTimer <= 0){
-			StartCoroutine(PeeWolf ());
+			StartCoroutine(Pee ());
 		}
-		if(sleepTimer <= 0 || Input.GetKeyDown(KeyCode.P)){
-			StartCoroutine(SleepWolf ());
+		if(sleepTimer <= 0){
+			StartCoroutine(Sleep ());
 
 		}
-		if(pukeTimer <= 0 || Input.GetKeyDown(KeyCode.O)){
-			StartCoroutine(PukeWolf ());
+		if(pukeTimer <= 0){
+			StartCoroutine(Puke ());
 
 		}
-		if(barkTimer <= 0 || Input.GetKeyDown(KeyCode.B)){
-			BarkWolf ();
+		if(soundTimer <= 0){
+			MakeSound ();
 		}
 	}
 
-	void BarkWolf(){
+	void MakeSound(){
 		AudioSourceAnimal.clip = barkSound;
 		AudioSourceAnimal.Play ();
-		barkTimer = Random.Range (14, 40);
+		soundTimer = Random.Range (14, 40);
 	}
 
-	IEnumerator PeeWolf(){
+	IEnumerator Pee(){
 
 
 		IsWalking = false;
@@ -76,7 +76,7 @@ public class Wolf : Animal {
 		peeTimer = Random.Range (20, 40);
 		IsWalking = true;
 	}
-	IEnumerator PukeWolf(){
+	IEnumerator Puke(){
 
 
 		IsWalking = false;
@@ -96,7 +96,7 @@ public class Wolf : Animal {
 		pukeTimer = Random.Range (41, 49);
 		IsWalking = true;
 	}
-	IEnumerator SleepWolf(){
+	IEnumerator Sleep(){
 
 
 		IsWalking = false;

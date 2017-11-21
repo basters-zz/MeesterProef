@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sheep : Animal {
 	private float peeTimer;
 	private float sleepTimer;
-	private float bleatTimer;
+	private float soundTimer;
 	private AudioClip bleatSound;
 
 	void Start(){
@@ -13,34 +13,35 @@ public class Sheep : Animal {
 		bleatSound = Resources.Load("Audio/SheepBleat")as AudioClip;
 		peeTimer = Random.Range (20, 40);
 		sleepTimer = Random.Range (40, 60);
-		bleatTimer = Random.Range (14, 40);
+		soundTimer = Random.Range (14, 40);
 	}
 	void Update(){
 		UpdateAnimal ();
 		if(IsWalking){
 			peeTimer -= Time.deltaTime;
 			sleepTimer -= Time.deltaTime;
-			bleatTimer -= Time.deltaTime;
+			soundTimer -= Time.deltaTime;
 		}
 		if(peeTimer <= 0){
-			StartCoroutine(PeeSheep ());
+			StartCoroutine(Pee ());
 		}
-		if(sleepTimer <= 0 || Input.GetKeyDown(KeyCode.P)){
-			StartCoroutine(SheepSleep ());
+		if(sleepTimer <= 0){
+			StartCoroutine(Sleep ());
 		}
-		if(bleatTimer <= 0 || Input.GetKeyDown(KeyCode.B)){
-			BleatSheep ();
+		if(soundTimer <= 0)
+		{
+			MakeSound ();
 		}
 	}
 
-	void BleatSheep(){
+	void MakeSound(){
 		AudioSourceAnimal.clip = bleatSound;
 		AudioSourceAnimal.Play ();
-		bleatTimer = Random.Range (14, 40);
+		soundTimer = Random.Range (14, 40);
 
 	}
 
-	IEnumerator PeeSheep(){
+	IEnumerator Pee(){
 
 
 		IsWalking = false;
@@ -54,7 +55,7 @@ public class Sheep : Animal {
 		peeTimer = Random.Range (20, 40);
 		IsWalking = true;
 	}
-	IEnumerator SheepSleep(){
+	IEnumerator Sleep(){
 
 
 		IsWalking = false;

@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour {
 	float totalAnimalCountScore;
 	float totalScore;
 
+
+	float highScore1;
+	float highScore2;
+	float highScore3;
+
 	Transform directionalLight;
 	Vector3 startRotDirectionalLight;
 
@@ -66,6 +71,7 @@ public class GameManager : MonoBehaviour {
 	GameObject wolfPrefab;
 	// Use this for initialization
 	void Start () {
+		Time.timeScale = 1;
 		sheepPrefab = Resources.Load ("Prefabs/Sheep") as GameObject;
 		wolfPrefab = Resources.Load ("Prefabs/Wolf") as GameObject;
 		deathScreen = GameObject.FindGameObjectWithTag ("DeathScreen");
@@ -76,7 +82,7 @@ public class GameManager : MonoBehaviour {
 		skipDayScreen.SetActive (false);
 		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
 		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
-		totalDayCount = 0;
+		totalDayCount = 1;
 		totalDayCountScoreMultiplier = 0;
 		totalSheepCountScore = 0;
 		totalWolfCountScore = 0;
@@ -100,6 +106,7 @@ public class GameManager : MonoBehaviour {
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		shiftPressed = false;
+		LoadData ();
 		SpawnAnimals ();
 	}
 	
@@ -110,8 +117,9 @@ public class GameManager : MonoBehaviour {
 		DayNightSwitch ();
 		CalculateScore ();
 		CheckDaySkippable ();
+		DefeatChecker ();
 		Pause ();
-		Debug.Log ("CycleMins: " + cycleMins + "   NightCountdown: " + nightCountDown);
+		CheckHighScores ();
 	}
 
 	void CheckDaySkippable(){
@@ -132,7 +140,7 @@ public class GameManager : MonoBehaviour {
 		List<GameObject> sheepsAlive = new List<GameObject>();
 		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
 
-		if(wolvesAlive.Count > sheepsAlive.Count && Mathf.Min(wolvesAlive.Count, sheepsAlive.Count) > 25 || sheepsAlive.Count < 0){
+		if(wolvesAlive.Count > sheepsAlive.Count && Mathf.Min(wolvesAlive.Count, sheepsAlive.Count) > 25 || sheepsAlive.Count <= 0){
 			SaveData ();
 			gamePaused = true;
 			Time.timeScale = 0;
@@ -201,11 +209,10 @@ public class GameManager : MonoBehaviour {
 
 	public void Restart(){
 		SaveData ();
-		Time.timeScale = 1;
 		SceneManager.LoadScene ("GameScene");
 
 	}
-	public void MainMenu(){
+	public void ToMainMenu(){
 		SaveData ();
 		Time.timeScale = 1;
 		SceneManager.LoadScene ("MainMenu");
@@ -216,24 +223,49 @@ public class GameManager : MonoBehaviour {
 			nightCountDown -= Time.deltaTime;
 		}
 	}
+
+	void CheckHighScores(){
+		if (totalScore > highScore1) {
+			highScore3 = highScore2;
+			highScore2 = highScore1;
+			highScore1 = totalScore;
+		} 
+		if (totalScore > highScore2 && totalScore < highScore1) {
+			highScore3 = highScore2;
+			highScore2 = totalScore;
+		} 
+		if (totalScore > highScore3 && totalScore < highScore2) {
+			highScore3 = totalScore;
+		}
+	}
+
+	public void LoadData(){
+		if (File.Exists (Application.persistentDataPath + "/SaveFile.bas")) {
+			BinaryFormatter binary = new BinaryFormatter ();
+			FileStream fStream = File.Open (Application.persistentDataPath + "/SaveFile.bas", FileMode.Open);
+			SaveManager Save = (SaveManager)binary.Deserialize (fStream);
+			fStream.Close ();
+
+			highScore1 = Save.Score1;
+			highScore2 = Save.Score2;
+			highScore3 = Save.Score3;
+		} else {
+			highScore1 = 0;
+			highScore2 = 0;
+			highScore3 = 0;
+
+		}
+
+	}
 		
 	public void SaveData(){
 		BinaryFormatter binary = new BinaryFormatter ();
 		FileStream fStream = File.Create (Application.persistentDataPath + "/SaveFile.bas");
 
 		SaveManager Save = new SaveManager ();
-		if (totalScore > Save.Score1) {
-			Save.Score3 = Save.Score2;
-			Save.Score2 = Save.Score1;
-			Save.Score1 = totalScore;
-		} else if (totalScore > Save.Score2 && totalScore < Save.Score1) {
-			Save.Score3 = Save.Score2;
-			Save.Score2 = totalScore;
-		} else if (totalScore > Save.Score3 && totalScore < Save.Score2) {
-			Save.Score3 = totalScore;
-		} else {
-			//do nothing
-		}
+		Save.Score1 = highScore1;
+		Save.Score2 = highScore2;
+		Save.Score3 = highScore3;
 		binary.Serialize (fStream, Save);
 		fStream.Close ();
 	}

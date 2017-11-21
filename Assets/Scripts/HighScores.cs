@@ -17,6 +17,7 @@ public class HighScores : MonoBehaviour {
 		highScore2 = GameObject.FindGameObjectWithTag ("HS2");
 		highScore3 = GameObject.FindGameObjectWithTag ("HS3");
 		LoadData ();
+
 	}
 		
 	public void LoadData(){
@@ -33,7 +34,7 @@ public class HighScores : MonoBehaviour {
 
 	}
 
-	public void GoToMain(){
+	public void ToMainMenu(){
 		SceneManager.LoadScene ("MainMenu");
 	}
 }
