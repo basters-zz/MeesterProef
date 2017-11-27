@@ -20,6 +20,7 @@ TagManager:
   - PauseScreen
   - DeathScreen
   - SkipDay
+  - Panel
   layers:
   - Default
   - TransparentFX

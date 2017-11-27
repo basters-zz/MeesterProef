@@ -13,17 +13,12 @@ public class GameManager : MonoBehaviour {
 	float nightTimer; //How long the night takes
 	float dayTimer; // How long it takes to make it day time again
 
-	float totalDayCount;
-	float totalDayCountScoreMultiplier;
-	float totalSheepCountScore;
-	float totalWolfCountScore;
-	float totalAnimalCountScore;
-	float totalScore;
-
-
-	float highScore1;
-	float highScore2;
-	float highScore3;
+	int totalDayCount;
+	int totalDayCountScoreMultiplier;
+	int totalSheepCountScore;
+	int totalWolfCountScore;
+	int totalAnimalCountScore;
+	int totalScore;
 
 	Transform directionalLight;
 	Vector3 startRotDirectionalLight;
@@ -65,7 +60,7 @@ public class GameManager : MonoBehaviour {
 	private Vector3 spawnPosition;
 
 
-
+	List<int> highScoreList = new List<int> ();
 
 	GameObject sheepPrefab;
 	GameObject wolfPrefab;
@@ -120,6 +115,27 @@ public class GameManager : MonoBehaviour {
 		DefeatChecker ();
 		Pause ();
 		CheckHighScores ();
+
+
+
+
+
+		//Temp score Testers
+		if(Input.GetKeyDown(KeyCode.F)){
+			highScoreList.Add (Random.Range(0, 166));
+
+
+		}
+		if(Input.GetKeyDown(KeyCode.G)){
+			highScoreList.Sort ();
+			highScoreList.Reverse ();
+
+		}
+		//
+
+
+
+
 	}
 
 	void CheckDaySkippable(){
@@ -225,17 +241,17 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void CheckHighScores(){
-		if (totalScore > highScore1) {
-			highScore3 = highScore2;
-			highScore2 = highScore1;
-			highScore1 = totalScore;
-		} 
-		if (totalScore > highScore2 && totalScore < highScore1) {
-			highScore3 = highScore2;
-			highScore2 = totalScore;
-		} 
-		if (totalScore > highScore3 && totalScore < highScore2) {
-			highScore3 = totalScore;
+
+		foreach (var score in highScoreList) {
+			if (totalScore > score) {
+				highScoreList.Add (totalScore);
+				highScoreList.Sort ();
+				highScoreList.Reverse ();
+				highScoreList.RemoveAt (5);
+				return;
+			} else {
+				//Continue Checking
+			}
 		}
 	}
 
@@ -246,13 +262,10 @@ public class GameManager : MonoBehaviour {
 			SaveManager Save = (SaveManager)binary.Deserialize (fStream);
 			fStream.Close ();
 
-			highScore1 = Save.Score1;
-			highScore2 = Save.Score2;
-			highScore3 = Save.Score3;
+
+			highScoreList = Save.HSList;
 		} else {
-			highScore1 = 0;
-			highScore2 = 0;
-			highScore3 = 0;
+
 
 		}
 
@@ -263,9 +276,9 @@ public class GameManager : MonoBehaviour {
 		FileStream fStream = File.Create (Application.persistentDataPath + "/SaveFile.bas");
 
 		SaveManager Save = new SaveManager ();
-		Save.Score1 = highScore1;
-		Save.Score2 = highScore2;
-		Save.Score3 = highScore3;
+
+		Save.HSList = highScoreList;
+
 		binary.Serialize (fStream, Save);
 		fStream.Close ();
 	}
@@ -356,11 +369,12 @@ public class GameManager : MonoBehaviour {
 		score.GetComponent<InputField> ().text = "Score: " + totalScore.ToString();
 	}
 	void CalculateScore(){
-		totalDayCountScoreMultiplier = totalDayCount * 1.5f; 
+	/*	totalDayCountScoreMultiplier = totalDayCount * 1.5f; 
 		totalSheepCountScore = GameObject.FindGameObjectsWithTag ("Sheep").Length * 4;
 		totalWolfCountScore = GameObject.FindGameObjectsWithTag ("Wolf").Length * 2;
 		totalAnimalCountScore = totalSheepCountScore - totalWolfCountScore;
-		totalScore = totalDayCountScoreMultiplier * totalAnimalCountScore;
+		totalScore = totalDayCountScoreMultiplier * totalAnimalCountScore;*/
+
 	}
 
 	//Spawn animals

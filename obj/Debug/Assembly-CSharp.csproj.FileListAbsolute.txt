@@ -19,7 +19,6 @@ E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\Unity.UNetWea
 E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\Unity.CecilTools.dll
 E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\Mono.Cecil.Pdb.dll
 E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\Mono.Cecil.Mdb.dll
-E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
 E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\UnityEngine.xml
 E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\UnityEditor.xml
 E:\Meesterproef\MeesterProefAlpha\MeesterproefAlpha\Temp\bin\Debug\UnityEngine.UI.xml
