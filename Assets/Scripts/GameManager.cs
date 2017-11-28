@@ -111,7 +111,6 @@ public class GameManager : MonoBehaviour {
 		CameraController ();
 		OnScreenDisplay ();
 		DayNightSwitch ();
-		CalculateScore ();
 		CheckDaySkippable ();
 		DefeatChecker ();
 		Pause ();
@@ -143,10 +142,10 @@ public class GameManager : MonoBehaviour {
 		foreach (var animal in ListOfAnimals.AllAnimals) {
 			if(GetComponent<Animal>().IsAlive == true){
 				if(GetComponent<Animal>().ID == 0){
-					///ADD POINTS
+					PositivePoints ();
 				}
 				else if(GetComponent<Animal>().ID == 1){
-					//EXTRACT POINTS
+					NegativePoints ();
 				}
 
 			}
@@ -371,7 +370,7 @@ public class GameManager : MonoBehaviour {
 			Destroy (GameObject.FindGameObjectWithTag("Sheep"));
 			}
 			sheepsToKill -= 1;
-			///Extract Points
+			NegativePoints ();
 		}
 
 		return;
@@ -385,13 +384,13 @@ public class GameManager : MonoBehaviour {
 		days.GetComponent<InputField> ().text = "Days: " + totalDayCount.ToString();
 		score.GetComponent<InputField> ().text = "Score: " + totalScore.ToString();
 	}
-	void CalculateScore(){
-	/*	totalDayCountScoreMultiplier = totalDayCount * 1.5f; 
-		totalSheepCountScore = GameObject.FindGameObjectsWithTag ("Sheep").Length * 4;
-		totalWolfCountScore = GameObject.FindGameObjectsWithTag ("Wolf").Length * 2;
-		totalAnimalCountScore = totalSheepCountScore - totalWolfCountScore;
-		totalScore = totalDayCountScoreMultiplier * totalAnimalCountScore;*/
+	void PositivePoints(){
+		totalScore += 5;
 
+	}
+
+	void NegativePoints(){
+		totalScore -= 2;
 	}
 
 	//Spawn animals
