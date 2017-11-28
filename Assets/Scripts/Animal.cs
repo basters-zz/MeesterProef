@@ -10,14 +10,14 @@ public class Animal : MonoBehaviour {
 	private bool isEating;
 	private bool isAlive;
 	private float eatTimer;
-	private GameObject explosion; //Gets declared in the inspector
+
 	private Animator anim;
 	private AudioSource audioSourceAnimal;
 	AnimalList listOfAnimals;
 	private int id;
 	// Use this for initialization
 	public void StartAnimal () {
-		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
+
 		isAlive = true;
 		speed = 3f; //declare the actual speed
 		transformZ = new Vector3 (0, 0, 1);
@@ -108,14 +108,9 @@ public class Animal : MonoBehaviour {
 		eatTimer = Random.Range (10, 32);
 	}
 	void OnMouseDown(){
-		Explode ();
 		isAlive = false;
 	}
-	public void Explode(){
 
-		Instantiate(explosion, transform.position, transform.rotation);
-		Destroy(gameObject);
-	}
 	IEnumerator Puke(){
 		yield return 0;	
 	}

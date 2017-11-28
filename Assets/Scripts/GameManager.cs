@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour {
 	//Declares the final position to spawn a animal at
 	private Vector3 spawnPosition;
 
+	private GameObject explosion; 
 
 	List<int> highScoreList = new List<int> ();
 	AnimalList ListOfAnimals;
@@ -103,6 +104,7 @@ public class GameManager : MonoBehaviour {
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		shiftPressed = false;
 		LoadData ();
+		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
 		SpawnAnimals ();
 	}
 	
@@ -137,15 +139,23 @@ public class GameManager : MonoBehaviour {
 
 
 	}
-	void CheckAnimalsAlive()
+	void KillAnimals()
 	{
 		foreach (var animal in ListOfAnimals.AllAnimals) {
 			if(GetComponent<Animal>().IsAlive == true){
 				if(GetComponent<Animal>().ID == 0){
 					PositivePoints ();
+					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
+					ListOfAnimals.WolfList.Remove (animal.gameObject);
+					ListOfAnimals.AllAnimals.Remove (animal.gameObject);
+					Destroy (animal.gameObject);
 				}
 				else if(GetComponent<Animal>().ID == 1){
 					NegativePoints ();
+					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
+					ListOfAnimals.SheepList.Remove (animal.gameObject);
+					ListOfAnimals.AllAnimals.Remove (animal.gameObject);
+					Destroy (animal.gameObject);
 				}
 
 			}
@@ -153,6 +163,8 @@ public class GameManager : MonoBehaviour {
 
 
 	}
+
+
 	void CheckDaySkippable(){
 		List<GameObject> wolvesAlive = new List<GameObject>();
 		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
