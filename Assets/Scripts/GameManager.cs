@@ -63,7 +63,8 @@ public class GameManager : MonoBehaviour {
 
 	List<int> highScoreList = new List<int> ();
 	AnimalList ListOfAnimals;
-
+	SaveManager saveManager;
+	LoadManager loadManager;
 	GameObject sheepPrefab;
 	GameObject wolfPrefab;
 	// Use this for initialization
@@ -103,14 +104,14 @@ public class GameManager : MonoBehaviour {
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 		shiftPressed = false;
-		LoadData ();
+		loadManager.LoadData (highScoreList);
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
 		SpawnAnimals ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		CameraController ();
+		
 		OnScreenDisplay ();
 		DayNightSwitch ();
 		CheckDaySkippable ();
@@ -119,7 +120,9 @@ public class GameManager : MonoBehaviour {
 		CheckHighScores ();
 
 
-
+		if(gamePaused == false){
+			mainCam.GetComponent<CameraController> ().CameraControlls ();
+		}
 
 
 		//Temp score Testers
@@ -184,7 +187,7 @@ public class GameManager : MonoBehaviour {
 		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
 
 		if(wolvesAlive.Count > sheepsAlive.Count && Mathf.Min(wolvesAlive.Count, sheepsAlive.Count) > 25 || sheepsAlive.Count <= 0){
-			SaveData ();
+			saveManager.SaveData (highScoreList);
 			gamePaused = true;
 			Time.timeScale = 0;
 			AnimalClickable ();
@@ -251,12 +254,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Restart(){
-		SaveData ();
+		saveManager.SaveData (highScoreList);
 		SceneManager.LoadScene ("GameScene");
 
 	}
 	public void ToMainMenu(){
-		SaveData ();
+		saveManager.SaveData (highScoreList);
 		Time.timeScale = 1;
 		SceneManager.LoadScene ("MainMenu");
 	}
@@ -281,34 +284,9 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 	}
-
-	public void LoadData(){
-		if (File.Exists (Application.persistentDataPath + "/SaveFile.bas")) {
-			BinaryFormatter binary = new BinaryFormatter ();
-			FileStream fStream = File.Open (Application.persistentDataPath + "/SaveFile.bas", FileMode.Open);
-			SaveManager Save = (SaveManager)binary.Deserialize (fStream);
-			fStream.Close ();
-
-
-			highScoreList = Save.HSList;
-		} else {
-
-
-		}
-
-	}
 		
-	public void SaveData(){
-		BinaryFormatter binary = new BinaryFormatter ();
-		FileStream fStream = File.Create (Application.persistentDataPath + "/SaveFile.bas");
+		
 
-		SaveManager Save = new SaveManager ();
-
-		Save.HSList = highScoreList;
-
-		binary.Serialize (fStream, Save);
-		fStream.Close ();
-	}
 	public void SkipDay(){
 		nightCountDown = 0;
 	}
@@ -343,7 +321,7 @@ public class GameManager : MonoBehaviour {
 				directionalLight.rotation = Quaternion.Euler (startRotDirectionalLight);
 
 			} else if (dayTimer <= 0) {
-				SaveData ();
+				saveManager.SaveData (highScoreList);
 				totalDayCount += 1;
 				RemoveSheep ();
 				DefeatChecker ();
@@ -442,63 +420,6 @@ public class GameManager : MonoBehaviour {
 	
 
 
-	void CameraController(){
-		Vector3 tmpXZ = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z);
-		Vector3 tmpY = new Vector3 (mainCam.transform.position.x, mainCam.transform.position.y, mainCam.transform.position.z);
-		if (!gamePaused) {
-			if (Input.GetKey (KeyCode.LeftShift)) {
-				shiftPressed = true;
-			} else {
-				shiftPressed = false;
-			}
-			if ((Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) && mainCam.transform.position.z < 397.7f) {
-				if (!shiftPressed) {
-					tmpXZ.z += 0.1f;
-					mainCam.transform.position = tmpXZ;
-				} else {
-					tmpXZ.z += 0.3f;
-					mainCam.transform.position = tmpXZ;
-				}
-			}
-			if ((Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) && mainCam.transform.localPosition.x > 100.8f) {
-				if (!shiftPressed) {
-					tmpXZ.x -= 0.1f;
-					mainCam.transform.position = tmpXZ;
-				} else {
-					tmpXZ.x -= 0.3f;
-					mainCam.transform.position = tmpXZ;
-				}
-			}
-			if ((Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) && mainCam.transform.localPosition.x < 389.8f) {
-				if (!shiftPressed) {
-					tmpXZ.x += 0.1f;
-					mainCam.transform.position = tmpXZ;
-				} else {
-					tmpXZ.x += 0.3f;
-					mainCam.transform.position = tmpXZ;
-				}
-			}
-			if ((Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow)) && mainCam.transform.localPosition.z > 89.44f) {
-				if (!shiftPressed) {
-					tmpXZ.z -= 0.1f;
-					mainCam.transform.position = tmpXZ;
-				} else {
-					tmpXZ.z -= 0.3f;
-					mainCam.transform.position = tmpXZ;
-				}
-			}
-
-			if ((Input.GetAxis ("Mouse ScrollWheel") < 0) && mainCam.transform.localPosition.y < 31.3f) {
-				tmpY.y += 0.5f;
-				mainCam.transform.position = tmpY;
-			}
-			if ((Input.GetAxis ("Mouse ScrollWheel") > 0) && mainCam.transform.localPosition.y > 7f) {
-				tmpY.y -= 0.5f;
-				mainCam.transform.position = tmpY;
-			}
-		}
-
-	}
 
 	//Build Spawn Area
 	void OnDrawGizmosSelected(){

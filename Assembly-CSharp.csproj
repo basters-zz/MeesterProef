@@ -53,12 +53,14 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Animal.cs" />
      <Compile Include="Assets\Scripts\AnimalList.cs" />
+     <Compile Include="Assets\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\Credits.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\HighScores.cs" />
      <Compile Include="Assets\Scripts\LoadManager.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\ParticleSystemDestroyer.cs" />
+     <Compile Include="Assets\Scripts\SavedData.cs" />
      <Compile Include="Assets\Scripts\SaveManager.cs" />
      <Compile Include="Assets\Scripts\Sheep.cs" />
      <Compile Include="Assets\Scripts\Wolf.cs" />

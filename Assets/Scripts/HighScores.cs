@@ -13,13 +13,14 @@ public class HighScores : MonoBehaviour {
 	public List<int> highScores = new List<int>(); 
 	public List<GameObject> physicalScores = new List<GameObject>();
 	Dictionary<string, GameObject> dictionary;
+	LoadManager load;
 	// Use this for initialization
 	void Start () {
 		
 		highScorePrefab = Resources.Load ("Prefabs/HighScore") as GameObject;
 		panel = GameObject.FindGameObjectWithTag ("Panel");
 
-		LoadData ();
+		load.LoadData (highScores);
 		SortScores ();
 
 	}
@@ -57,16 +58,6 @@ public class HighScores : MonoBehaviour {
 
 	}
 		
-	public void LoadData(){
-		if(File.Exists(Application.persistentDataPath + "/SaveFile.bas")){
-			BinaryFormatter binary = new BinaryFormatter ();
-			FileStream fStream = File.Open (Application.persistentDataPath + "/SaveFile.bas", FileMode.Open);
-			SaveManager Save = (SaveManager)binary.Deserialize(fStream);
-			fStream.Close ();
-			highScores = Save.HSList;
-		}
-
-	}
 
 	public void ToMainMenu(){
 		SceneManager.LoadScene ("MainMenu");

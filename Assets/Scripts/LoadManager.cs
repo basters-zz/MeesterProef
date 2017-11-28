@@ -10,22 +10,26 @@ public class LoadManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-
-		LoadData ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
-	public void LoadData(){
-		if(File.Exists(Application.persistentDataPath + "/SaveFile.bas")){
+	public void LoadData(List<int> dataToLoad){
+		if (File.Exists (Application.persistentDataPath + "/SaveFile.bas")) {
 			BinaryFormatter binary = new BinaryFormatter ();
 			FileStream fStream = File.Open (Application.persistentDataPath + "/SaveFile.bas", FileMode.Open);
-			SaveManager Save = (SaveManager)binary.Deserialize(fStream);
+			SavedData Load = (SavedData)binary.Deserialize (fStream);
 			fStream.Close ();
 
-		}
 
+			dataToLoad = Load.HSList;
+		} else {
+
+
+		}
+		return;
 	}
+
 }
