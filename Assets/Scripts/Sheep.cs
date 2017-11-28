@@ -9,6 +9,7 @@ public class Sheep : Animal {
 	private AudioClip bleatSound;
 
 	void Start(){
+		ID = 1;
 		StartAnimal ();
 		bleatSound = Resources.Load("Audio/SheepBleat")as AudioClip;
 		peeTimer = Random.Range (20, 40);
@@ -33,6 +34,8 @@ public class Sheep : Animal {
 			MakeSound ();
 		}
 	}
+
+
 
 	void MakeSound(){
 		AudioSourceAnimal.clip = bleatSound;

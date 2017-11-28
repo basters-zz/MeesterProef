@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour {
 
 
 	List<int> highScoreList = new List<int> ();
+	AnimalList ListOfAnimals;
 
 	GameObject sheepPrefab;
 	GameObject wolfPrefab;
@@ -137,7 +138,22 @@ public class GameManager : MonoBehaviour {
 
 
 	}
+	void CheckAnimalsAlive()
+	{
+		foreach (var animal in ListOfAnimals.AllAnimals) {
+			if(GetComponent<Animal>().IsAlive == true){
+				if(GetComponent<Animal>().ID == 0){
+					///ADD POINTS
+				}
+				else if(GetComponent<Animal>().ID == 1){
+					//EXTRACT POINTS
+				}
 
+			}
+		}
+
+
+	}
 	void CheckDaySkippable(){
 		List<GameObject> wolvesAlive = new List<GameObject>();
 		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
@@ -355,6 +371,7 @@ public class GameManager : MonoBehaviour {
 			Destroy (GameObject.FindGameObjectWithTag("Sheep"));
 			}
 			sheepsToKill -= 1;
+			///Extract Points
 		}
 
 		return;

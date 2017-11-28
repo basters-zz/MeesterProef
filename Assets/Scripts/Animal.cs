@@ -8,13 +8,17 @@ public class Animal : MonoBehaviour {
 	private Vector3 transformZ;
 	private bool isWalking;
 	private bool isEating;
+	private bool isAlive;
 	private float eatTimer;
 	private GameObject explosion; //Gets declared in the inspector
 	private Animator anim;
 	private AudioSource audioSourceAnimal;
+	AnimalList listOfAnimals;
+	private int id;
 	// Use this for initialization
 	public void StartAnimal () {
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
+		isAlive = true;
 		speed = 3f; //declare the actual speed
 		transformZ = new Vector3 (0, 0, 1);
 		isWalking = true;
@@ -22,8 +26,23 @@ public class Animal : MonoBehaviour {
 		anim.SetBool("Walking", true);
 		eatTimer = Random.Range (10, 19);
 		audioSourceAnimal = GetComponent<AudioSource> ();
-	}
 
+
+	}
+	void AddAnimalToList(){
+		listOfAnimals.AllAnimals.Add (this.gameObject);
+		if(id == 1){
+			listOfAnimals.SheepList.Add (this.gameObject);
+
+		}
+		else if(id == 0){
+			listOfAnimals.WolfList.Add (this.gameObject);
+		}
+	}
+	public int ID{
+		get{ return  id;}	
+		set{ id = value;}
+	}
 	public bool IsWalking
 	{
 		get{ return  isWalking;}	
@@ -38,6 +57,12 @@ public class Animal : MonoBehaviour {
 	{
 		get{ return  anim;}	
 		set{ anim = value;}
+	}
+	public bool IsAlive
+	{
+		get{ return anim;}
+		set{ isAlive = value;}
+
 	}
 	
 	// Update is called once per frame
@@ -84,6 +109,7 @@ public class Animal : MonoBehaviour {
 	}
 	void OnMouseDown(){
 		Explode ();
+		isAlive = false;
 	}
 	public void Explode(){
 

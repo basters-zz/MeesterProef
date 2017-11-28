@@ -15,6 +15,7 @@ public class Wolf : Animal {
 	private GameObject PukeParticle;
 
 	void Start(){
+		ID = 0;
 		StartAnimal ();
 		killAmount = Random.Range (0,3);
 		pukeSound = Resources.Load("Audio/Puke")as AudioClip;
