@@ -13,19 +13,22 @@ public class HighScores : MonoBehaviour {
 	public List<int> highScores = new List<int>(); 
 	public List<GameObject> physicalScores = new List<GameObject>();
 	Dictionary<string, GameObject> dictionary;
-	LoadManager load;
+
 	// Use this for initialization
 	void Start () {
-		
+
+
+	
 		highScorePrefab = Resources.Load ("Prefabs/HighScore") as GameObject;
 		panel = GameObject.FindGameObjectWithTag ("Panel");
+		this.GetComponent<LoadManager>().LoadData(highScores);
 
-		load.LoadData (highScores);
 		SortScores ();
 
 	}
 
 	void Update(){
+		//this.GetComponent<LoadManager>().LoadData(highScores);
 		/*if(Input.GetKeyDown(KeyCode.A)){
 			highScores.Add (Random.Range(0, 166));
 
@@ -45,7 +48,7 @@ public class HighScores : MonoBehaviour {
 			GameObject TempPrefab = Instantiate (highScorePrefab, panel.transform);
 			TempPrefab.transform.GetChild (0).GetComponent<Text> ().text = score.ToString();
 			physicalScores.Add (TempPrefab);
-		
+			Debug.Log ("gsafgsa");
 		}
 		foreach (var scoreObj in physicalScores) {
 			Debug.Log(physicalScores.IndexOf (scoreObj));

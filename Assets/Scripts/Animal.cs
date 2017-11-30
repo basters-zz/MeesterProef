@@ -8,7 +8,6 @@ public class Animal : MonoBehaviour {
 	private Vector3 transformZ;
 	private bool isWalking;
 	private bool isEating;
-	[SerializeField]
 	private bool isAlive = true;
 	private float eatTimer;
 	private float peeTimer;

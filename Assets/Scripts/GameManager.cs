@@ -100,23 +100,24 @@ public class GameManager : MonoBehaviour {
 		endDay = false;
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
-		Debug.Log (highScoreList.Count);
-		GetComponent<LoadManager>().LoadData (highScoreList);
+		this.GetComponent<LoadManager>().LoadData (highScoreList);
+	
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
 		StartCoroutine (DefeatChecker());
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		Debug.Log (highScoreList.Count + "HSCOUNT");
 		StatTracker ();
 		OnScreenDisplay ();
 		DayNightSwitch ();
 		CheckDaySkippable ();
 
 		Pause ();
-		CheckHighScores ();
+		//CheckHighScores ();
 
-
+		//GetComponent<LoadManager> ().LoadData (highScoreList);
 
 		KillAnimals ();
 
@@ -243,11 +244,14 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Restart(){
+		AddScoreToHighScores ();
 		GetComponent<SaveManager>().SaveData (highScoreList);
+
 		SceneManager.LoadScene ("GameScene");
 
 	}
 	public void ToMainMenu(){
+		AddScoreToHighScores ();
 		GetComponent<SaveManager>().SaveData (highScoreList);
 		Time.timeScale = 1;
 		SceneManager.LoadScene ("MainMenu");
@@ -259,19 +263,24 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void CheckHighScores(){
+	void AddScoreToHighScores(){
 
-		foreach (var score in highScoreList) {
+		highScoreList.Add (totalScore);
+		Debug.Log (highScoreList.Count);
+		/*foreach (int score in highScoreList) {
+			Debug.Log ("gas");
 			if (totalScore > score) {
-				highScoreList.Add (totalScore);
+
 				highScoreList.Sort ();
 				highScoreList.Reverse ();
 				highScoreList.RemoveAt (5);
+				Debug.Log ("CHECK");
 				return;
 			} else {
 				//Continue Checking
+
 			}
-		}
+		}*/
 		return;
 	}
 		
@@ -311,6 +320,7 @@ public class GameManager : MonoBehaviour {
 				directionalLight.rotation = Quaternion.Euler (startRotDirectionalLight);
 
 			} else if (dayTimer <= 0) {
+				AddScoreToHighScores ();
 				GetComponent<SaveManager>().SaveData (highScoreList);
 				totalDayCount += 1;
 				RemoveSheep ();
@@ -444,6 +454,7 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds (0.1f);
 
 		if(wolvesAlive > sheepsAlive && Mathf.Min(wolvesAlive, sheepsAlive) > 25 || sheepsAlive <= 0){
+			AddScoreToHighScores ();
 			GetComponent<SaveManager>().SaveData (highScoreList);
 			gamePaused = true;
 			Time.timeScale = 0;

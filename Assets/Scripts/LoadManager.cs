@@ -21,10 +21,13 @@ public class LoadManager : MonoBehaviour {
 			BinaryFormatter binary = new BinaryFormatter ();
 			FileStream fStream = File.Open (Application.persistentDataPath + "/SaveFile.bas", FileMode.Open);
 			SavedData Load = (SavedData)binary.Deserialize (fStream);
+			dataToLoad.AddRange(Load.HSList);
 			fStream.Close ();
 
+			Debug.Log(Load.HSList.Count);
+			Debug.Log(dataToLoad.Count);
 
-			dataToLoad = Load.HSList;
+
 		} else {
 
 

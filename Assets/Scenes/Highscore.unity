@@ -1083,6 +1083,7 @@ GameObject:
   - component: {fileID: 1690778517}
   - component: {fileID: 1690778516}
   - component: {fileID: 1690778515}
+  - component: {fileID: 1690778521}
   m_Layer: 5
   m_Name: HighScores UI
   m_TagString: Untagged
@@ -1180,6 +1181,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1690778521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1690778514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce521ade74b69b4c8a7020514812ceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2139431366
 GameObject:
   m_ObjectHideFlags: 0

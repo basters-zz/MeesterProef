@@ -8092,6 +8092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9b46213ae1746c4eb3d49400191e39b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHighScores: 10
 --- !u!114 &976549017
 MonoBehaviour:
   m_ObjectHideFlags: 0
