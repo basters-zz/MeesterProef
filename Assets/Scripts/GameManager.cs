@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour {
 		Debug.Log (highScoreList.Count);
 		GetComponent<LoadManager>().LoadData (highScoreList);
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
-
+		StartCoroutine (DefeatChecker());
 	}
 	
 	// Update is called once per frame
@@ -141,7 +141,9 @@ public class GameManager : MonoBehaviour {
 		}
 		if(Input.GetKeyDown(KeyCode.K)){
 			RemoveSheep ();
+
 		}
+
 
 
 
@@ -164,7 +166,7 @@ public class GameManager : MonoBehaviour {
 					NegativePoints ();
 					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
 					deathListAnimals.Add (animal);
-					DefeatChecker ();
+
 				}
 
 			}
@@ -194,20 +196,6 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 		
-
-	void DefeatChecker(){
-
-
-		if(wolvesAlive > sheepsAlive /*&& Mathf.Min(wolvesAlive, sheepsAlive) > 25*/ || sheepsAlive <= 0){
-			GetComponent<SaveManager>().SaveData (highScoreList);
-			gamePaused = true;
-			Time.timeScale = 0;
-			AnimalClickable ();
-			deathScreen.SetActive (enabled);
-
-		}
-
-	}
 
 	void DayTimeCalculator(){
 		float extraSeconds = 0;
@@ -326,7 +314,7 @@ public class GameManager : MonoBehaviour {
 				GetComponent<SaveManager>().SaveData (highScoreList);
 				totalDayCount += 1;
 				RemoveSheep ();
-				DefeatChecker ();
+
 				DayTimeCalculator ();
 				SpawnAnimals ();
 				startDay = false;
@@ -361,7 +349,7 @@ public class GameManager : MonoBehaviour {
 
 	void RemoveSheep(){
 
-		int sheepsToKill = 20;
+		int sheepsToKill = 0;
 
 		foreach(GameObject animal in allAnimals){
 			if (animal.GetComponent<Animal> ().ID == 0) {
@@ -376,7 +364,8 @@ public class GameManager : MonoBehaviour {
 						animal.GetComponent<Animal> ().IsAlive = false;
 						sheepsToKill -= 1;
 						NegativePoints ();
-						DefeatChecker ();
+
+
 					}
 
 				}
@@ -449,5 +438,23 @@ public class GameManager : MonoBehaviour {
 		Gizmos.color = new Color (1,0,0.5f,0.4f);
 		Gizmos.DrawCube (centerSpawnArea, sizeSpawnArea);
 	}
+
+
+	IEnumerator DefeatChecker(){
+		yield return new WaitForSeconds (0.1f);
+
+		if(wolvesAlive > sheepsAlive && Mathf.Min(wolvesAlive, sheepsAlive) > 25 || sheepsAlive <= 0){
+			GetComponent<SaveManager>().SaveData (highScoreList);
+			gamePaused = true;
+			Time.timeScale = 0;
+			Debug.Log ("MEOOWWOWW");
+			AnimalClickable ();
+			deathScreen.SetActive (enabled);
+
+		}
+		StartCoroutine(DefeatChecker());
+
+	}
+
 
 }
