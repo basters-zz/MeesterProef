@@ -14,11 +14,10 @@ public class GameManager : MonoBehaviour {
 	float dayTimer; // How long it takes to make it day time again
 
 	int totalDayCount;
-	int totalDayCountScoreMultiplier;
-	int totalSheepCountScore;
-	int totalWolfCountScore;
-	int totalAnimalCountScore;
 	int totalScore;
+
+	int wolvesAlive;
+	int sheepsAlive;
 
 	Transform directionalLight;
 	Vector3 startRotDirectionalLight;
@@ -48,9 +47,6 @@ public class GameManager : MonoBehaviour {
 	float totalWolfSpawn;
 	float totalSheepSpawn;
 
-	//This boolean checks if shift is pressed so the camera moves faster
-	bool shiftPressed;
-
 	//The local position of the spawn area
 	private Vector3 centerSpawnArea;
 
@@ -62,34 +58,35 @@ public class GameManager : MonoBehaviour {
 	private GameObject explosion; 
 
 	List<int> highScoreList = new List<int> ();
-	AnimalList ListOfAnimals;
-	SaveManager saveManager;
-	LoadManager loadManager;
+	List<GameObject> allAnimals = new List<GameObject>();
+	List<GameObject> deathListAnimals = new List<GameObject>();
 	GameObject sheepPrefab;
 	GameObject wolfPrefab;
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 1;
+
 		sheepPrefab = Resources.Load ("Prefabs/Sheep") as GameObject;
 		wolfPrefab = Resources.Load ("Prefabs/Wolf") as GameObject;
+		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
+		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
+		totalAnimalSpawn = 8;
+		SpawnAnimals ();
 		deathScreen = GameObject.FindGameObjectWithTag ("DeathScreen");
 		pauseScreen = GameObject.FindGameObjectWithTag ("PauseScreen");
 		skipDayScreen = GameObject.FindGameObjectWithTag ("SkipDay");
 		deathScreen.SetActive (false);
 		pauseScreen.SetActive (false);
 		skipDayScreen.SetActive (false);
-		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
-		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
+
 		totalDayCount = 1;
-		totalDayCountScoreMultiplier = 0;
-		totalSheepCountScore = 0;
-		totalWolfCountScore = 0;
-		totalAnimalCountScore = 0;
+		wolvesAlive = 0;
+		sheepsAlive = 1;
 		directionalLight = GameObject.FindGameObjectWithTag ("Sun").transform;
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
 		nightCountDown = 300f;
-		totalAnimalSpawn = 8;
+
 		nightTimer = 5;
 		dayTimer = 5;
 		startRotDirectionalLight = new Vector3 (0, -30, -1.525f);
@@ -103,22 +100,28 @@ public class GameManager : MonoBehaviour {
 		endDay = false;
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
-		shiftPressed = false;
-		loadManager.LoadData (highScoreList);
+		Debug.Log (highScoreList.Count);
+		GetComponent<LoadManager>().LoadData (highScoreList);
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
-		SpawnAnimals ();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		StatTracker ();
 		OnScreenDisplay ();
 		DayNightSwitch ();
 		CheckDaySkippable ();
-		DefeatChecker ();
+
 		Pause ();
 		CheckHighScores ();
 
+
+
+		KillAnimals ();
+
+		Debug.Log (sheepsAlive);
+		Debug.Log (wolvesAlive);
 
 		if(gamePaused == false){
 			mainCam.GetComponent<CameraController> ().CameraControlls ();
@@ -136,7 +139,10 @@ public class GameManager : MonoBehaviour {
 			highScoreList.Reverse ();
 
 		}
-		//
+		if(Input.GetKeyDown(KeyCode.K)){
+			RemoveSheep ();
+		}
+
 
 
 
@@ -144,34 +150,44 @@ public class GameManager : MonoBehaviour {
 	}
 	void KillAnimals()
 	{
-		foreach (var animal in ListOfAnimals.AllAnimals) {
-			if(GetComponent<Animal>().IsAlive == true){
-				if(GetComponent<Animal>().ID == 0){
+
+		foreach (var animal in allAnimals) {
+			if(animal.GetComponent<Animal>().IsAlive == false){
+				Debug.Log (animal.GetComponent<Animal>().ID == 0);
+				Debug.Log ("test");
+				if(animal.GetComponent<Animal>().ID == 0){
 					PositivePoints ();
 					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
-					ListOfAnimals.WolfList.Remove (animal.gameObject);
-					ListOfAnimals.AllAnimals.Remove (animal.gameObject);
-					Destroy (animal.gameObject);
+					deathListAnimals.Add (animal);
 				}
-				else if(GetComponent<Animal>().ID == 1){
+				else if(animal.GetComponent<Animal>().ID == 1){
 					NegativePoints ();
 					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
-					ListOfAnimals.SheepList.Remove (animal.gameObject);
-					ListOfAnimals.AllAnimals.Remove (animal.gameObject);
-					Destroy (animal.gameObject);
+					deathListAnimals.Add (animal);
+					DefeatChecker ();
 				}
 
 			}
+
+
+
 		}
+		GameObject tempAnimal;
+		foreach (var animal in deathListAnimals) {
+			tempAnimal = animal;
+			allAnimals.Remove(animal);
+			Destroy (tempAnimal.gameObject);
+		}
+
+		deathListAnimals.Clear ();
+		return;
 
 
 	}
 
 
 	void CheckDaySkippable(){
-		List<GameObject> wolvesAlive = new List<GameObject>();
-		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
-		if (wolvesAlive.Count == 0 && !endDay && !startDay) {
+		if (wolvesAlive == 0 && !endDay && !startDay) {
 			skipDayScreen.SetActive (true);
 		} else {
 			skipDayScreen.SetActive (false);
@@ -180,14 +196,10 @@ public class GameManager : MonoBehaviour {
 		
 
 	void DefeatChecker(){
-		List<GameObject> wolvesAlive = new List<GameObject>();
-		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
 
-		List<GameObject> sheepsAlive = new List<GameObject>();
-		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
 
-		if(wolvesAlive.Count > sheepsAlive.Count && Mathf.Min(wolvesAlive.Count, sheepsAlive.Count) > 25 || sheepsAlive.Count <= 0){
-			saveManager.SaveData (highScoreList);
+		if(wolvesAlive > sheepsAlive /*&& Mathf.Min(wolvesAlive, sheepsAlive) > 25*/ || sheepsAlive <= 0){
+			GetComponent<SaveManager>().SaveData (highScoreList);
 			gamePaused = true;
 			Time.timeScale = 0;
 			AnimalClickable ();
@@ -198,13 +210,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void DayTimeCalculator(){
-		List<GameObject> wolvesAlive = new List<GameObject>();
-		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
 		float extraSeconds = 0;
 		float extraMinutesCycle = 0;
-		foreach (GameObject LivingWolf in wolvesAlive) {
-			extraSeconds += 4;
-			extraMinutesCycle += 0.133f;
+		foreach (GameObject animal in allAnimals) {
+			if(animal.GetComponent<Animal>().ID == 0){
+				extraSeconds += 4;
+				extraMinutesCycle += 0.133f;
+			}
 		}
 		cycleMins = 10f + extraMinutesCycle;
 		nightCountDown = 300 + extraSeconds;
@@ -219,25 +231,14 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1;
 	}
 	void AnimalClickable(){
-		List<GameObject> wolvesAlive = new List<GameObject>();
-		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
-
-		List<GameObject> sheepsAlive = new List<GameObject>();
-		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
 		if (gamePaused) {
-			foreach (GameObject LivingSheep in sheepsAlive) {
-				LivingSheep.GetComponent<BoxCollider> ().enabled = false;
-			}
-			foreach (GameObject LivingWolf in wolvesAlive) {
-				LivingWolf.GetComponent<BoxCollider> ().enabled = false;
+			foreach (GameObject animal in allAnimals) {
+				animal.GetComponent<BoxCollider>().enabled = false;
 			}
 		}
 		if (!gamePaused) {
-			foreach (GameObject LivingSheep in sheepsAlive) {
-				LivingSheep.GetComponent<BoxCollider> ().enabled = true;
-			}
-			foreach (GameObject LivingWolf in wolvesAlive) {
-				LivingWolf.GetComponent<BoxCollider> ().enabled = true;
+			foreach (GameObject animal in allAnimals) {
+				animal.GetComponent<BoxCollider> ().enabled = true;
 			}
 		}
 		return;
@@ -254,12 +255,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Restart(){
-		saveManager.SaveData (highScoreList);
+		GetComponent<SaveManager>().SaveData (highScoreList);
 		SceneManager.LoadScene ("GameScene");
 
 	}
 	public void ToMainMenu(){
-		saveManager.SaveData (highScoreList);
+		GetComponent<SaveManager>().SaveData (highScoreList);
 		Time.timeScale = 1;
 		SceneManager.LoadScene ("MainMenu");
 	}
@@ -283,6 +284,7 @@ public class GameManager : MonoBehaviour {
 				//Continue Checking
 			}
 		}
+		return;
 	}
 		
 		
@@ -321,7 +323,7 @@ public class GameManager : MonoBehaviour {
 				directionalLight.rotation = Quaternion.Euler (startRotDirectionalLight);
 
 			} else if (dayTimer <= 0) {
-				saveManager.SaveData (highScoreList);
+				GetComponent<SaveManager>().SaveData (highScoreList);
 				totalDayCount += 1;
 				RemoveSheep ();
 				DefeatChecker ();
@@ -342,35 +344,53 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	void RemoveSheep(){
-		List<GameObject> wolvesAlive = new List<GameObject>();
-		wolvesAlive.AddRange(GameObject.FindGameObjectsWithTag("Wolf"));
-
-		List<GameObject> sheepsAlive = new List<GameObject>();
-		sheepsAlive.AddRange(GameObject.FindGameObjectsWithTag("Sheep"));
-
-		int sheepsToKill = 0;
-
-		foreach(GameObject WolfAlive in wolvesAlive){
-			sheepsToKill += WolfAlive.GetComponent<Wolf>().KillAmount;
-		}
-
-		while(sheepsToKill > 0){
-			if(sheepsAlive.Count >= 1){
-			Destroy (GameObject.FindGameObjectWithTag("Sheep"));
+	void StatTracker(){
+		wolvesAlive = 0;
+		sheepsAlive = 0;
+		foreach (var animal in allAnimals) {
+			if(animal.GetComponent<Animal>().ID == 0){
+				wolvesAlive += 1;
 			}
-			sheepsToKill -= 1;
-			NegativePoints ();
+			else if(animal.GetComponent<Animal>().ID == 1){
+				sheepsAlive += 1;
+			}
 		}
-
+		
 		return;
+	}
+
+	void RemoveSheep(){
+
+		int sheepsToKill = 20;
+
+		foreach(GameObject animal in allAnimals){
+			if (animal.GetComponent<Animal> ().ID == 0) {
+				sheepsToKill += animal.GetComponent<Wolf> ().KillAmount;
+			}
+		}
+		while (sheepsToKill > 0) {
+			foreach (GameObject animal in allAnimals) {
+				Debug.Log (sheepsToKill);
+				if (animal.GetComponent<Animal> ().ID == 1) {
+					if (sheepsToKill > 0) {
+						animal.GetComponent<Animal> ().IsAlive = false;
+						sheepsToKill -= 1;
+						NegativePoints ();
+						DefeatChecker ();
+					}
+
+				}
+			}
+		}
+		return;
+
 
 
 	}
 	//Check how many animals are left and display it on screen
 	void OnScreenDisplay(){
-		sheeps.GetComponent<InputField> ().text = "Sheep: " + GameObject.FindGameObjectsWithTag ("Sheep").Length.ToString ();
-		wolves.GetComponent<InputField> ().text = "Wolves: " + GameObject.FindGameObjectsWithTag ("Wolf").Length.ToString ();
+		sheeps.GetComponent<InputField> ().text = "Sheep: " + sheepsAlive.ToString();
+		wolves.GetComponent<InputField> ().text = "Wolves: " + wolvesAlive.ToString ();
 		days.GetComponent<InputField> ().text = "Days: " + totalDayCount.ToString();
 		score.GetComponent<InputField> ().text = "Score: " + totalScore.ToString();
 	}
@@ -410,12 +430,14 @@ public class GameManager : MonoBehaviour {
 	//Spawn a sheep
 	public void SpawnSheep(){
 		Quaternion tempRot = Quaternion.Euler (0, Random.Range(-1, 360), 0);
-		Instantiate (sheepPrefab, spawnPosition, tempRot);
+		GameObject tempSheep = Instantiate (sheepPrefab, spawnPosition, tempRot);
+		allAnimals.Add (tempSheep);
 	}
 	//Spawn a wolf
 	public void SpawnWolf(){
 		Quaternion tempRot = Quaternion.Euler (0, Random.Range(-1, 360), 0);
-		Instantiate (wolfPrefab, spawnPosition, tempRot);
+		GameObject tempWolf = Instantiate (wolfPrefab, spawnPosition, tempRot);
+		allAnimals.Add (tempWolf);
 	}
 	
 

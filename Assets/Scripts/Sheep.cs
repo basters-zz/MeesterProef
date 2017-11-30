@@ -8,6 +8,7 @@ public class Sheep : Animal {
 	private float soundTimer;
 	private AudioClip bleatSound;
 
+
 	void Start(){
 		ID = 1;
 		StartAnimal ();

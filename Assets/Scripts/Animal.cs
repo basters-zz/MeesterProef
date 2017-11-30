@@ -8,7 +8,8 @@ public class Animal : MonoBehaviour {
 	private Vector3 transformZ;
 	private bool isWalking;
 	private bool isEating;
-	private bool isAlive;
+	[SerializeField]
+	private bool isAlive = true;
 	private float eatTimer;
 
 	private Animator anim;
@@ -17,8 +18,7 @@ public class Animal : MonoBehaviour {
 	private int id;
 	// Use this for initialization
 	public void StartAnimal () {
-
-		isAlive = true;
+		
 		speed = 3f; //declare the actual speed
 		transformZ = new Vector3 (0, 0, 1);
 		isWalking = true;
@@ -29,7 +29,7 @@ public class Animal : MonoBehaviour {
 
 
 	}
-	void AddAnimalToList(){
+	/*void AddAnimalToList(){
 		listOfAnimals.AllAnimals.Add (this.gameObject);
 		if(id == 1){
 			listOfAnimals.SheepList.Add (this.gameObject);
@@ -38,7 +38,7 @@ public class Animal : MonoBehaviour {
 		else if(id == 0){
 			listOfAnimals.WolfList.Add (this.gameObject);
 		}
-	}
+	}*/
 	public int ID{
 		get{ return  id;}	
 		set{ id = value;}
@@ -60,7 +60,7 @@ public class Animal : MonoBehaviour {
 	}
 	public bool IsAlive
 	{
-		get{ return anim;}
+		get{ return isAlive;}
 		set{ isAlive = value;}
 
 	}
@@ -90,7 +90,7 @@ public class Animal : MonoBehaviour {
 
 		Debug.DrawRay (transform.position, fwd * 3, Color.red);
 		if (Physics.Raycast (transform.position, fwd,out hit, 3)) {
-			if (hit.collider.tag == "Walls" || hit.collider.tag == "Sheep") {
+			if (hit.collider.CompareTag("Walls")   || hit.collider.CompareTag("Sheep") || hit.collider.CompareTag("Wolf")) {
 				int randomint = Random.Range (0, 360);
 				transform.Rotate (0, randomint, 0);
 			}

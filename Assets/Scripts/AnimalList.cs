@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimalList : MonoBehaviour {
-	List<GameObject> allAnimals = new List<GameObject>();
+
 	List<GameObject> sheepList = new List<GameObject>();
 	List<GameObject> wolfList = new List<GameObject>();
 	// Use this for initialization
@@ -11,11 +11,11 @@ public class AnimalList : MonoBehaviour {
 		
 	}
 
-	public List<GameObject>AllAnimals
+	/*public List<GameObject>AllAnimals
 	{
 		get{ return  allAnimals;}	
 		set{ allAnimals = value;}
-	}
+	}*/
 	public List<GameObject>SheepList
 	{
 		get{ return  sheepList;}	
