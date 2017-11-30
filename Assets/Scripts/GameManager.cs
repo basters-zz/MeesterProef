@@ -43,9 +43,9 @@ public class GameManager : MonoBehaviour {
 	bool gamePaused;
 
 	//These variables are used to figure out how many of each animal should be spawned
-	float totalAnimalSpawn;
-	float totalWolfSpawn;
-	float totalSheepSpawn;
+	int totalAnimalSpawn;
+	int totalWolfSpawn;
+	int totalSheepSpawn;
 
 	//The local position of the spawn area
 	private Vector3 centerSpawnArea;
@@ -407,7 +407,8 @@ public class GameManager : MonoBehaviour {
 	void SpawnAnimals(){
 		totalWolfSpawn = totalAnimalSpawn / Random.Range (2, 5);
 		totalSheepSpawn = totalAnimalSpawn - totalWolfSpawn;
-		totalAnimalSpawn = Mathf.Round(totalAnimalSpawn * 1.25f);
+		float tempFloat = totalAnimalSpawn;
+		totalAnimalSpawn = (int)Mathf.Round(tempFloat * 1.25f);
 
 		while (totalSheepSpawn > 0){
 			ChangeSpawnPos ();

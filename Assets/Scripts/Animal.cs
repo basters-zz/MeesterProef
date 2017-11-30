@@ -4,22 +4,30 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Animal : MonoBehaviour {
-	private float speed; //movement speed
+	private int speed; //movement speed
 	private Vector3 transformZ;
 	private bool isWalking;
 	private bool isEating;
 	[SerializeField]
 	private bool isAlive = true;
 	private float eatTimer;
-
+	private float peeTimer;
+	private float sleepTimer;
+	private float soundTimer;
+	private float pukeTimer;
+	private int killAmount;
 	private Animator anim;
 	private AudioSource audioSourceAnimal;
 	AnimalList listOfAnimals;
 	private int id;
 	// Use this for initialization
 	public void StartAnimal () {
-		
-		speed = 3f; //declare the actual speed
+		killAmount = Random.Range (0,3);
+		speed = 3; //declare the actual speed
+		peeTimer = Random.Range (20, 40);
+		sleepTimer = Random.Range (40, 60);
+		soundTimer = Random.Range (14, 40);
+		pukeTimer = Random.Range (41, 49);
 		transformZ = new Vector3 (0, 0, 1);
 		isWalking = true;
 		anim = GetComponent<Animator>();
