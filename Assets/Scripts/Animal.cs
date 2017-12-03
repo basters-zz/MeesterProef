@@ -8,7 +8,7 @@ public class Animal : MonoBehaviour {
 	private Vector3 transformZ;
 	private bool isWalking;
 	private bool isEating;
-	private bool isAlive = true;
+	private bool isAlive;
 	private float eatTimer;
 	private float peeTimer;
 	private float sleepTimer;
@@ -21,6 +21,7 @@ public class Animal : MonoBehaviour {
 	private int id;
 	// Use this for initialization
 	public void StartAnimal () {
+		isAlive = true;
 		killAmount = Random.Range (0,3);
 		speed = 3; //declare the actual speed
 		peeTimer = Random.Range (20, 40);

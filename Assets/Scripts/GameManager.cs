@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour {
 	
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
 		StartCoroutine (DefeatChecker());
+		StartCoroutine (KillAnimals ());
 	}
 	
 	// Update is called once per frame
@@ -119,7 +120,7 @@ public class GameManager : MonoBehaviour {
 
 		//GetComponent<LoadManager> ().LoadData (highScoreList);
 
-		KillAnimals ();
+	
 
 		Debug.Log (sheepsAlive);
 		Debug.Log (wolvesAlive);
@@ -151,42 +152,7 @@ public class GameManager : MonoBehaviour {
 
 
 	}
-	void KillAnimals()
-	{
 
-		foreach (var animal in allAnimals) {
-			if(animal.GetComponent<Animal>().IsAlive == false){
-				Debug.Log (animal.GetComponent<Animal>().ID == 0);
-				Debug.Log ("test");
-				if(animal.GetComponent<Animal>().ID == 0){
-					PositivePoints ();
-					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
-					deathListAnimals.Add (animal);
-				}
-				else if(animal.GetComponent<Animal>().ID == 1){
-					NegativePoints ();
-					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
-					deathListAnimals.Add (animal);
-
-				}
-
-			}
-
-
-
-		}
-		GameObject tempAnimal;
-		foreach (var animal in deathListAnimals) {
-			tempAnimal = animal;
-			allAnimals.Remove(animal);
-			Destroy (tempAnimal.gameObject);
-		}
-
-		deathListAnimals.Clear ();
-		return;
-
-
-	}
 
 
 	void CheckDaySkippable(){
@@ -464,6 +430,43 @@ public class GameManager : MonoBehaviour {
 
 		}
 		StartCoroutine(DefeatChecker());
+
+	}
+	IEnumerator KillAnimals()
+	{
+		yield return new WaitForSeconds (0.1f);
+		foreach (var animal in allAnimals) {
+			if(animal.GetComponent<Animal>().IsAlive == false){
+				Debug.Log (animal.GetComponent<Animal>().ID == 0);
+				Debug.Log ("test");
+				if(animal.GetComponent<Animal>().ID == 0){
+					PositivePoints ();
+					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
+					deathListAnimals.Add (animal);
+				}
+				else if(animal.GetComponent<Animal>().ID == 1){
+					NegativePoints ();
+					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
+					deathListAnimals.Add (animal);
+
+				}
+
+			}
+
+
+
+		}
+		GameObject tempAnimal;
+		foreach (var animal in deathListAnimals) {
+			tempAnimal = animal;
+			allAnimals.Remove(animal);
+			Destroy (tempAnimal.gameObject);
+		}
+
+		deathListAnimals.Clear ();
+		StartCoroutine (KillAnimals());
+
+
 
 	}
 
