@@ -64,7 +64,6 @@
      <Compile Include="Assets\Scripts\SaveManager.cs" />
      <Compile Include="Assets\Scripts\Sheep.cs" />
      <Compile Include="Assets\Scripts\Wolf.cs" />
-     <None Include="Assets\Horse\SoftAlpha.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>E:/Unity3D/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
