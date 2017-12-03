@@ -9,6 +9,7 @@ public class Animal : MonoBehaviour {
 	private bool isWalking;
 	private bool isEating;
 	private bool isAlive;
+	private bool isSelected;
 	private float eatTimer;
 	private float peeTimer;
 	private float sleepTimer;
@@ -19,9 +20,12 @@ public class Animal : MonoBehaviour {
 	private AudioSource audioSourceAnimal;
 	AnimalList listOfAnimals;
 	private int id;
+	private GameObject selector;
 	// Use this for initialization
 	public void StartAnimal () {
+		selector = null;
 		isAlive = true;
+		isSelected = false;
 		killAmount = Random.Range (0,3);
 		speed = 3; //declare the actual speed
 		peeTimer = Random.Range (20, 40);
@@ -47,6 +51,7 @@ public class Animal : MonoBehaviour {
 			listOfAnimals.WolfList.Add (this.gameObject);
 		}
 	}*/
+
 	public int ID{
 		get{ return  id;}	
 		set{ id = value;}
@@ -55,6 +60,11 @@ public class Animal : MonoBehaviour {
 	{
 		get{ return  isWalking;}	
 		set{ isWalking = value;}
+	}
+	public bool IsSelected
+	{
+		get{ return isSelected;}
+		set{ isSelected = value;}
 	}
 	public AudioSource AudioSourceAnimal
 	{
@@ -72,20 +82,26 @@ public class Animal : MonoBehaviour {
 		set{ isAlive = value;}
 
 	}
+	public GameObject Selector
+	{
+		get{ return selector;}
+		set{ selector = value;}
+	}
 	
 	// Update is called once per frame
 	public void UpdateAnimal () {
+		Debug.Log (selector);
 		if (isWalking) {
 			Walk ();
 			eatTimer -= Time.deltaTime;
 		} else {
-			anim.SetBool("Eat", false);
+			anim.SetBool ("Eat", false);
 		}
-		if(eatTimer <= 0){
+		if (eatTimer <= 0) {
 			isWalking = false;
 			isEating = true;
 			if (isEating) {
-				StartCoroutine (Eat());
+				StartCoroutine (Eat ());
 			}
 		}
 
@@ -98,7 +114,7 @@ public class Animal : MonoBehaviour {
 
 		Debug.DrawRay (transform.position, fwd * 3, Color.red);
 		if (Physics.Raycast (transform.position, fwd,out hit, 3)) {
-			if (hit.collider.CompareTag("Walls")   || hit.collider.CompareTag("Sheep") || hit.collider.CompareTag("Wolf")) {
+			if (hit.collider.CompareTag("Walls")   || hit.collider.CompareTag("Animal")) {
 				int randomint = Random.Range (0, 360);
 				transform.Rotate (0, randomint, 0);
 			}

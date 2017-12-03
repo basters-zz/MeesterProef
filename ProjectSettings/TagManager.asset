@@ -21,6 +21,7 @@ TagManager:
   - DeathScreen
   - SkipDay
   - Panel
+  - Animal
   layers:
   - Default
   - TransparentFX

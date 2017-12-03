@@ -56,6 +56,11 @@ public class GameManager : MonoBehaviour {
 	private Vector3 spawnPosition;
 
 	private GameObject explosion; 
+	private GameObject sheepSelector;
+
+
+	Ray ray;
+	RaycastHit hit;
 
 	List<int> highScoreList = new List<int> ();
 	List<GameObject> allAnimals = new List<GameObject>();
@@ -68,6 +73,7 @@ public class GameManager : MonoBehaviour {
 
 		sheepPrefab = Resources.Load ("Prefabs/Sheep") as GameObject;
 		wolfPrefab = Resources.Load ("Prefabs/Wolf") as GameObject;
+		sheepSelector = Resources.Load ("Prefabs/SheepSelected") as GameObject;
 		centerSpawnArea = new Vector3 (241.6f, 0.1f, 260f);
 		sizeSpawnArea = new Vector3 (293.31f, 0f, 299.8f);
 		totalAnimalSpawn = 8;
@@ -100,6 +106,9 @@ public class GameManager : MonoBehaviour {
 		endDay = false;
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
+
+
+
 		this.GetComponent<LoadManager>().LoadData (highScoreList);
 	
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
@@ -114,7 +123,7 @@ public class GameManager : MonoBehaviour {
 		OnScreenDisplay ();
 		DayNightSwitch ();
 		CheckDaySkippable ();
-
+		SelectedAnimals ();
 		Pause ();
 		//CheckHighScores ();
 
@@ -162,7 +171,39 @@ public class GameManager : MonoBehaviour {
 			skipDayScreen.SetActive (false);
 		}
 	}
-		
+
+	void SelectedAnimals(){
+		if(Input.GetMouseButtonDown(1)){
+			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			if(Physics.Raycast(ray, out hit))
+			{
+				if(hit.collider.CompareTag("Animal")){
+
+					if(hit.collider.GetComponent<Animal>().IsSelected == false){
+						GameObject tempGO = Instantiate (sheepSelector, hit.transform);
+						Vector3 tempGOPos = new Vector3 (hit.transform.position.x, hit.transform.position.y, hit.transform.position.z);
+						tempGOPos.y += 2;
+						//tempGOPos.z -= 4;
+						tempGO.transform.position = tempGOPos;
+						hit.collider.GetComponent<Animal> ().Selector = tempGO;
+						hit.collider.GetComponent<Animal> ().IsSelected = true;
+					}
+					else if(hit.collider.GetComponent<Animal>().IsSelected == true){
+						Destroy(hit.collider.GetComponent<Animal> ().Selector);
+						hit.collider.GetComponent<Animal> ().IsSelected = false;
+					}
+				}
+			}
+		}
+
+
+
+	/*	foreach (var animal in allAnimals) {
+			if(animal.GetComponent<Animal>().IsSelected == true){
+
+			}
+		}*/
+	}
 
 	void DayTimeCalculator(){
 		float extraSeconds = 0;
