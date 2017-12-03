@@ -1230,7 +1230,7 @@ RectTransform:
   - {fileID: 625683830}
   - {fileID: 37980156}
   m_Father: {fileID: 740224179}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5988,9 +5988,9 @@ RectTransform:
   - {fileID: 775897938}
   - {fileID: 811803434}
   - {fileID: 403875731}
+  - {fileID: 1476827103}
   - {fileID: 150417185}
   - {fileID: 1649362113}
-  - {fileID: 1476827103}
   - {fileID: 309935168}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -11749,12 +11749,12 @@ RectTransform:
   - {fileID: 2127461194}
   - {fileID: 771873532}
   m_Father: {fileID: 740224179}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.7245874, y: 0.7727022}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.5, y: 1.5}
-  m_SizeDelta: {x: 245, y: 79.600006}
+  m_AnchorMin: {x: 0.72300005, y: 0}
+  m_AnchorMax: {x: 1, y: 0.24113481}
+  m_AnchoredPosition: {x: 1, y: 5.5}
+  m_SizeDelta: {x: 243, y: 70.600006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1476827104
 MonoBehaviour:
@@ -12750,7 +12750,7 @@ RectTransform:
   - {fileID: 1791725972}
   - {fileID: 1202754021}
   m_Father: {fileID: 740224179}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
