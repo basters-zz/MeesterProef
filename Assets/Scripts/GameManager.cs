@@ -130,7 +130,6 @@ public class GameManager : MonoBehaviour {
 		Pause ();
 		Clock ();
 		//CheckHighScores ();
-		Debug.Log(nightCountDown);
 		//GetComponent<LoadManager> ().LoadData (highScoreList);
 
 	
