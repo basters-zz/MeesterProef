@@ -123,6 +123,7 @@ public class Animal : MonoBehaviour {
 
 	//Walking is for every animal the same so the Walk function is put in the Animal script
 	IEnumerator Eat(){
+		isWalking = false;
 		anim.SetBool ("Walking", false);
 		anim.SetBool("Eat", true);
 		yield return new WaitForSecondsRealtime (5f);
