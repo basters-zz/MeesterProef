@@ -4,10 +4,9 @@ using UnityEngine;
 
 
 public class Wolf : Animal {
-	private float peeTimer;
-	private float sleepTimer;
+
 	private float pukeTimer;
-	private float soundTimer;
+
 	private int killAmount;
 	private AudioClip barkSound;
 	private AudioClip pukeSound;
@@ -22,10 +21,10 @@ public class Wolf : Animal {
 		PukeSpawn = transform.GetChild(0).gameObject;
 		PukeParticle = Resources.Load("Particles/PukeParticle")as GameObject;
 		barkSound = Resources.Load("Audio/Bark")as AudioClip;
-		peeTimer = Random.Range (20, 40);
-		sleepTimer = Random.Range (50, 60);
+		PeeTimer = Random.Range (20, 40);
+		SleepTimer = Random.Range (50, 60);
 		pukeTimer = Random.Range (41, 49);
-		soundTimer = Random.Range (14, 40);
+		SoundTimer = Random.Range (14, 40);
 
 	}
 	public int KillAmount{
@@ -36,15 +35,15 @@ public class Wolf : Animal {
 	void Update(){
 		UpdateAnimal ();
 		if(IsWalking){
-			peeTimer -= Time.deltaTime;
-			sleepTimer -= Time.deltaTime;
+			PeeTimer -= Time.deltaTime;
+			SleepTimer -= Time.deltaTime;
 			pukeTimer -= Time.deltaTime;
-			soundTimer -= Time.deltaTime;
+			SoundTimer -= Time.deltaTime;
 		}
-		if(peeTimer <= 0){
+		if(PeeTimer <= 0){
 			StartCoroutine(Pee ());
 		}
-		if(sleepTimer <= 0){
+		if(SleepTimer <= 0){
 			StartCoroutine(Sleep ());
 
 		}
@@ -52,7 +51,7 @@ public class Wolf : Animal {
 			StartCoroutine(Puke ());
 
 		}
-		if(soundTimer <= 0){
+		if(SoundTimer <= 0){
 			MakeSound ();
 		}
 	}
@@ -60,25 +59,26 @@ public class Wolf : Animal {
 	void MakeSound(){
 		AudioSourceAnimal.clip = barkSound;
 		AudioSourceAnimal.Play ();
-		soundTimer = Random.Range (14, 40);
+		SoundTimer = Random.Range (14, 40);
 	}
 
 	IEnumerator Pee(){
-
+		PeeTimer = Random.Range (20, 40);
 
 		IsWalking = false;
-		Anim.SetBool ("WolfPee", true);
-		Anim.SetBool ("Walking", false);
 
+		Anim.SetBool ("Walking", false);
+		Anim.SetBool ("WolfPee", true);
 		yield return new WaitForSeconds (2.5f);
 
 		Anim.SetBool ("WolfPee", false);
 		Anim.SetBool ("Walking", true);
-		peeTimer = Random.Range (20, 40);
+
 		IsWalking = true;
+
 	}
 	IEnumerator Puke(){
-
+		pukeTimer = Random.Range (41, 49);
 
 		IsWalking = false;
 		Anim.SetBool ("Walking", false);
@@ -94,25 +94,30 @@ public class Wolf : Animal {
 
 		Anim.SetBool ("WolfPuke", false);
 		Anim.SetBool ("Walking", true);
-		pukeTimer = Random.Range (41, 49);
+
 		IsWalking = true;
+
 	}
 	IEnumerator Sleep(){
-
+		SleepTimer = Random.Range (50, 60);
 
 		IsWalking = false;
-		Anim.SetBool ("WolfSleep", true);
 		Anim.SetBool ("Walking", false);
+		Anim.SetBool ("WolfSleep", true);
+
 
 		yield return new WaitForSeconds (10f);
-
-		Anim.SetBool ("WolfWakeUp", true);
+		Debug.Log ("TEST");
 		Anim.SetBool ("WolfSleep", false);
+		Anim.SetBool ("WolfWakeUp", true);
+
 
 		yield return new WaitForSeconds (1.2f);
-		Anim.SetBool ("Walking", true);
+
 		Anim.SetBool ("WolfWakeUp", false);
-		sleepTimer = Random.Range (50, 60);
+		Anim.SetBool ("Walking", true);
+
 		IsWalking = true;
+
 	}
 }

@@ -386,13 +386,13 @@ AnimatorStateTransition:
     m_ConditionEvent: WolfWakeUp
     m_EventTreshold: 0
   - m_ConditionMode: 2
-    m_ConditionEvent: WolfSleep
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
     m_ConditionEvent: WolfPee
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: WolfPuke
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102376708849648420}

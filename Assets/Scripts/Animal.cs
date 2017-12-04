@@ -87,6 +87,18 @@ public class Animal : MonoBehaviour {
 		get{ return selector;}
 		set{ selector = value;}
 	}
+	public float SleepTimer{
+		get{ return sleepTimer;}
+		set{ sleepTimer = value;}
+	}
+	public float PeeTimer{
+		get{ return peeTimer;}
+		set{ peeTimer = value;}
+	}
+	public float SoundTimer{
+		get{ return soundTimer;}
+		set{ soundTimer = value;}
+	}
 	
 	// Update is called once per frame
 	public void UpdateAnimal () {
@@ -102,6 +114,9 @@ public class Animal : MonoBehaviour {
 			if (isEating) {
 				StartCoroutine (Eat ());
 			}
+		}
+		else{
+			isEating = false;
 		}
 
 	}
@@ -122,6 +137,7 @@ public class Animal : MonoBehaviour {
 
 	//Walking is for every animal the same so the Walk function is put in the Animal script
 	IEnumerator Eat(){
+		eatTimer = Random.Range (10, 32);
 		isWalking = false;
 		anim.SetBool ("Walking", false);
 		anim.SetBool("Eat", true);
@@ -129,7 +145,8 @@ public class Animal : MonoBehaviour {
 		anim.SetBool("Eat", false);
 		anim.SetBool("Walking", true);
 		isWalking = true;
-		eatTimer = Random.Range (10, 32);
+
+
 	}
 	void OnMouseDown(){
 		isAlive = false;
