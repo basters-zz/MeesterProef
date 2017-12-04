@@ -14,9 +14,6 @@ public class LoadManager : MonoBehaviour {
 			SavedData Load = (SavedData)binary.Deserialize (fStream);
 			dataToLoad.AddRange(Load.HSList);
 			fStream.Close ();
-		} else {
-
-
 		}
 		return;
 	}

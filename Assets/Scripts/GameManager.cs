@@ -131,18 +131,6 @@ public class GameManager : MonoBehaviour {
 		if(gamePaused == false){
 			mainCam.GetComponent<CameraController> ().CameraControlls ();
 		}
-			
-		//Temp score Testers
-		if(Input.GetKeyDown(KeyCode.F)){
-			highScoreList.Add (Random.Range(0, 166));
-		}
-		if(Input.GetKeyDown(KeyCode.G)){
-			highScoreList.Sort ();
-			highScoreList.Reverse ();
-		}
-		if(Input.GetKeyDown(KeyCode.K)){
-			RemoveSheep ();
-		}
 		if(clockSeconds <= 0){
 			clockMinutes -= 1;
 			clockSeconds = 60;
