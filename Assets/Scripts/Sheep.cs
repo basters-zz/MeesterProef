@@ -34,6 +34,9 @@ public class Sheep : Animal {
 		{
 			MakeSound ();
 		}
+		if(Input.GetKeyDown(KeyCode.H)){
+			StartCoroutine (Sleep ());
+		}
 	}
 
 

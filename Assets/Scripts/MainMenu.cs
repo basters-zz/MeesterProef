@@ -21,6 +21,9 @@ public class MainMenu : MonoBehaviour {
 	public void HighScore(){
 		SceneManager.LoadScene ("Highscore");
 	}
+	public void HowToPlay(){
+		SceneManager.LoadScene ("HowToPlay");
+	}
 	public void Credits(){
 		SceneManager.LoadScene ("Credits");
 	}
