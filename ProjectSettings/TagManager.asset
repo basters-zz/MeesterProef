@@ -23,6 +23,7 @@ TagManager:
   - Panel
   - Animal
   - Clock
+  - Losses
   layers:
   - Default
   - TransparentFX

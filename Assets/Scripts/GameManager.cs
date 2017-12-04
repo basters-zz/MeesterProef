@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour {
 	int wolvesAlive;
 	int sheepsAlive;
 
+	int lostScore;
+	int sheepLost;
+
 	Transform directionalLight;
 	Vector3 startRotDirectionalLight;
 
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour {
 	GameObject skipDayScreen;
 	GameObject clockObj;
 	GameObject mainCam;
+	GameObject losses;
+
 
 	GameObject nightSwitchPanel;
 	Color colorNightSwitch;
@@ -84,13 +89,16 @@ public class GameManager : MonoBehaviour {
 		pauseScreen = GameObject.FindGameObjectWithTag ("PauseScreen");
 		skipDayScreen = GameObject.FindGameObjectWithTag ("SkipDay");
 		clockObj = GameObject.FindGameObjectWithTag ("Clock");
+		losses = GameObject.FindGameObjectWithTag ("Losses");
 		deathScreen.SetActive (false);
 		pauseScreen.SetActive (false);
 		skipDayScreen.SetActive (false);
 
+		lostScore = 0;
 		totalDayCount = 1;
 		wolvesAlive = 0;
 		sheepsAlive = 1;
+		sheepLost = 0;
 		directionalLight = GameObject.FindGameObjectWithTag ("Sun").transform;
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
@@ -111,7 +119,7 @@ public class GameManager : MonoBehaviour {
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
 
 
-
+		losses.SetActive (false);
 		this.GetComponent<LoadManager>().LoadData (highScoreList);
 	
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
@@ -226,6 +234,8 @@ public class GameManager : MonoBehaviour {
 			}
 		}*/
 	}
+
+
 
 	void DayTimeCalculator(){
 		float extraSeconds = 0;
@@ -355,7 +365,7 @@ public class GameManager : MonoBehaviour {
 				GetComponent<SaveManager>().SaveData (highScoreList);
 				totalDayCount += 1;
 				RemoveSheep ();
-
+				StartCoroutine (ShowLosses());
 				DayTimeCalculator ();
 				SpawnAnimals ();
 				SetClock ();
@@ -404,8 +414,11 @@ public class GameManager : MonoBehaviour {
 				if (animal.GetComponent<Animal> ().ID == 1) {
 					if (sheepsToKill > 0) {
 						animal.GetComponent<Animal> ().IsAlive = false;
-						sheepsToKill -= 1;
+						sheepLost += 1;
+						lostScore += 2;
 						NegativePoints ();
+						sheepsToKill -= 1;
+
 
 
 					}
@@ -534,6 +547,14 @@ public class GameManager : MonoBehaviour {
 
 
 
+	}
+	IEnumerator ShowLosses(){
+		losses.SetActive (true);
+		losses.GetComponent<Text> ().text = "You lost " + sheepLost + " sheep, what resulted in " + lostScore + " points lost!";
+		yield return new WaitForSeconds(5);
+		losses.SetActive (false);
+		sheepLost = 0;
+		lostScore = 0;
 	}
 
 
