@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 	bool shiftPressed;
+	[SerializeField]
+	float speed;
+	[SerializeField]
+	float fastSpeed;
+	[SerializeField]
+	float scrollSpeed;
 	// Use this for initialization
 	void Start () {
-		
+		speed =  0.1f;
+		fastSpeed = 0.3f;
+		scrollSpeed = 0.5f;
 	}
 	
 	// Update is called once per frame
@@ -23,51 +31,51 @@ public class CameraController : MonoBehaviour {
 		}
 		if ((Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) && transform.position.z < 397.7f) {
 			if (!shiftPressed) {
-				tmpXZ.z += 0.1f;
+				tmpXZ.z += speed;
 				transform.position = tmpXZ;
 			} else 
 			{
-				tmpXZ.z += 0.3f;
+				tmpXZ.z += fastSpeed;
 				transform.position = tmpXZ;
 			}
 		}
 		if ((Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) && transform.localPosition.x > 100.8f) {
 			if (!shiftPressed) {
-				tmpXZ.x -= 0.1f;
+				tmpXZ.x -= speed;
 				transform.position = tmpXZ;
 			}
 			else {
-				tmpXZ.x -= 0.3f;
+				tmpXZ.x -= fastSpeed;
 				transform.position = tmpXZ;
 			}
 		}
 		if ((Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) && transform.localPosition.x < 389.8f) {
 			if (!shiftPressed) {
-				tmpXZ.x += 0.1f;
+				tmpXZ.x += speed;
 				transform.position = tmpXZ;
 			}
 			else {
-				tmpXZ.x += 0.3f;
+				tmpXZ.x += fastSpeed;
 				transform.position = tmpXZ;
 			}
 		}
 		if ((Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow)) && transform.localPosition.z > 89.44f) {
 			if (!shiftPressed) {
-				tmpXZ.z -= 0.1f;
+				tmpXZ.z -= speed;
 				transform.position = tmpXZ;
 			}
 			else {
-				tmpXZ.z -= 0.3f;
+				tmpXZ.z -= fastSpeed;
 				transform.position = tmpXZ;
 			}
 		}
 
 		if ((Input.GetAxis ("Mouse ScrollWheel") < 0) && transform.localPosition.y < 31.3f) {
-			tmpY.y += 0.5f;
+			tmpY.y += scrollSpeed;
 			transform.position = tmpY;
 		}
 		if ((Input.GetAxis ("Mouse ScrollWheel") > 0) && transform.localPosition.y > 7f) {
-			tmpY.y -= 0.5f;
+			tmpY.y -= scrollSpeed;
 			transform.position = tmpY;
 		}
 
