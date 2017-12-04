@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour {
 	GameObject deathScreen;
 	GameObject pauseScreen;
 	GameObject skipDayScreen;
-
+	GameObject clockObj;
 	GameObject mainCam;
 
 	GameObject nightSwitchPanel;
@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour {
 	private GameObject explosion; 
 	private GameObject sheepSelector;
 
+	int clockMinutes;
+	float clockSeconds;
 
 	Ray ray;
 	RaycastHit hit;
@@ -81,6 +83,7 @@ public class GameManager : MonoBehaviour {
 		deathScreen = GameObject.FindGameObjectWithTag ("DeathScreen");
 		pauseScreen = GameObject.FindGameObjectWithTag ("PauseScreen");
 		skipDayScreen = GameObject.FindGameObjectWithTag ("SkipDay");
+		clockObj = GameObject.FindGameObjectWithTag ("Clock");
 		deathScreen.SetActive (false);
 		pauseScreen.SetActive (false);
 		skipDayScreen.SetActive (false);
@@ -114,19 +117,20 @@ public class GameManager : MonoBehaviour {
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
 		StartCoroutine (DefeatChecker());
 		StartCoroutine (KillAnimals ());
+		clockSeconds = (int)nightCountDown;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (highScoreList.Count + "HSCOUNT");
 		StatTracker ();
 		OnScreenDisplay ();
 		DayNightSwitch ();
 		CheckDaySkippable ();
 		SelectedAnimals ();
 		Pause ();
+		Clock ();
 		//CheckHighScores ();
-
+		Debug.Log(nightCountDown);
 		//GetComponent<LoadManager> ().LoadData (highScoreList);
 
 	
@@ -154,12 +158,31 @@ public class GameManager : MonoBehaviour {
 			RemoveSheep ();
 
 		}
+		if(clockSeconds <= 0){
+			clockMinutes -= 1;
+			clockSeconds = 60;
+		}
+			
 
+	}
+	void Clock(){
 
+		while(clockSeconds > 60){
+			clockMinutes += 1;
+			clockSeconds -= 60;
+		}
 
+		if(clockSeconds >= 10){
+			clockObj.GetComponent<InputField>().text = "Time: " + clockMinutes + ":" + (int)clockSeconds;
+		}
+		else if(clockSeconds < 10){
+			clockObj.GetComponent<InputField>().text = "Time: " + clockMinutes + ":0" + (int)clockSeconds;
+		}
+	
+	}
 
-
-
+	void SetClock(){
+		clockSeconds = (int)nightCountDown;
 	}
 
 
@@ -267,6 +290,7 @@ public class GameManager : MonoBehaviour {
 		if (!gamePaused) {
 			directionalLight.Rotate (cycleCalc, 0, 0);
 			nightCountDown -= Time.deltaTime;
+			clockSeconds -= Time.deltaTime;
 		}
 	}
 
@@ -318,6 +342,7 @@ public class GameManager : MonoBehaviour {
 				endDay = false;
 				startDay = true;
 				dayTimer -= Time.deltaTime;
+
 			}
 
 			//Start making it day again
@@ -334,6 +359,7 @@ public class GameManager : MonoBehaviour {
 
 				DayTimeCalculator ();
 				SpawnAnimals ();
+				SetClock ();
 				startDay = false;
 
 			}

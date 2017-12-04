@@ -98,7 +98,6 @@ public class Animal : MonoBehaviour {
 			anim.SetBool ("Eat", false);
 		}
 		if (eatTimer <= 0) {
-			isWalking = false;
 			isEating = true;
 			if (isEating) {
 				StartCoroutine (Eat ());

@@ -70,6 +70,18 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: WolfWakeUp
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Walking
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102554661454959590}
   m_Solo: 0
@@ -96,6 +108,18 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Eat
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102309027257960124}
@@ -124,6 +148,18 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Walking
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102309027257960124}
   m_Solo: 0
@@ -150,6 +186,18 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: WolfPuke
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102242295819973634}
@@ -178,6 +226,18 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: WolfPee
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102309027257960124}
   m_Solo: 0
@@ -204,6 +264,18 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Walking
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102387812643531230}
@@ -232,6 +304,18 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: WolfPuke
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Eat
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102309027257960124}
   m_Solo: 0
@@ -259,6 +343,18 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Eat
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102777306529765046}
   m_Solo: 0
@@ -285,6 +381,18 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfWakeUp
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfSleep
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPee
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: WolfPuke
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102376708849648420}
