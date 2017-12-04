@@ -6,32 +6,36 @@ using UnityEngine.EventSystems;
 public class Animal : MonoBehaviour {
 	private int speed; //movement speed
 	private Vector3 transformZ;
+
 	private bool isWalking;
-	private bool isEating;
 	private bool isAlive;
 	private bool isSelected;
+
 	private float eatTimer;
 	private float peeTimer;
 	private float sleepTimer;
 	private float soundTimer;
 	private float pukeTimer;
+
 	private int killAmount;
+
 	private Animator anim;
+
 	private AudioSource audioSourceAnimal;
-	AnimalList listOfAnimals;
+
 	private int id;
+
 	private GameObject selector;
+
 	// Use this for initialization
 	public void StartAnimal () {
 		selector = null;
 		isAlive = true;
 		isSelected = false;
-		killAmount = Random.Range (0,3);
 		speed = 3; //declare the actual speed
 		peeTimer = Random.Range (20, 40);
 		sleepTimer = Random.Range (40, 60);
 		soundTimer = Random.Range (14, 40);
-		pukeTimer = Random.Range (41, 49);
 		transformZ = new Vector3 (0, 0, 1);
 		isWalking = true;
 		anim = GetComponent<Animator>();
@@ -41,17 +45,6 @@ public class Animal : MonoBehaviour {
 
 
 	}
-	/*void AddAnimalToList(){
-		listOfAnimals.AllAnimals.Add (this.gameObject);
-		if(id == 1){
-			listOfAnimals.SheepList.Add (this.gameObject);
-
-		}
-		else if(id == 0){
-			listOfAnimals.WolfList.Add (this.gameObject);
-		}
-	}*/
-
 	public int ID{
 		get{ return  id;}	
 		set{ id = value;}
@@ -99,25 +92,25 @@ public class Animal : MonoBehaviour {
 		get{ return soundTimer;}
 		set{ soundTimer = value;}
 	}
+	public float PukeTimer{
+		get{ return pukeTimer;}
+		set{ pukeTimer = value;}
+	}
+	public int KillAmount{
+		get{ return  killAmount;}	
+		set{ killAmount = value;}
+	}
 	
 	// Update is called once per frame
 	public void UpdateAnimal () {
-		Debug.Log (selector);
 		if (isWalking) {
 			Walk ();
 			eatTimer -= Time.deltaTime;
-		} else {
-			anim.SetBool ("Eat", false);
 		}
 		if (eatTimer <= 0) {
-			isEating = true;
-			if (isEating) {
 				StartCoroutine (Eat ());
-			}
 		}
-		else{
-			isEating = false;
-		}
+
 
 	}
 	//Walking is for every animal the same so the Walk function is put in the Animal script

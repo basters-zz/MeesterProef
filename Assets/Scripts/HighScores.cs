@@ -10,58 +10,30 @@ using UnityEngine.SceneManagement;
 public class HighScores : MonoBehaviour {
 	GameObject highScorePrefab;
 	GameObject panel;
+
 	public List<int> highScores = new List<int>(); 
 	public List<GameObject> physicalScores = new List<GameObject>();
-	Dictionary<string, GameObject> dictionary;
 
 	// Use this for initialization
 	void Start () {
-
-
-	
 		highScorePrefab = Resources.Load ("Prefabs/HighScore") as GameObject;
 		panel = GameObject.FindGameObjectWithTag ("Panel");
-		this.GetComponent<LoadManager>().LoadData(highScores);
-
+		this.GetComponent<LoadManager> ().LoadData (highScores);
 		SortScores ();
-
 	}
-
-	void Update(){
-		//this.GetComponent<LoadManager>().LoadData(highScores);
-		/*if(Input.GetKeyDown(KeyCode.A)){
-			highScores.Add (Random.Range(0, 166));
-
-
-		}
-		if(Input.GetKeyDown(KeyCode.B)){
-			highScores.Sort ();
-			highScores.Reverse ();
-
-		}*/
-
-
-	}
-
 	void SortScores(){
 		foreach (var score in highScores) {
 			GameObject TempPrefab = Instantiate (highScorePrefab, panel.transform);
 			TempPrefab.transform.GetChild (0).GetComponent<Text> ().text = score.ToString();
 			physicalScores.Add (TempPrefab);
-			Debug.Log ("gsafgsa");
 		}
 		foreach (var scoreObj in physicalScores) {
-			Debug.Log(physicalScores.IndexOf (scoreObj));
 			Vector3 tempPos = scoreObj.transform.position;
 			tempPos.y -= (physicalScores.IndexOf (scoreObj) * 75);
 			scoreObj.transform.position = tempPos;
 		}
 		return;
-
-
 	}
-		
-
 	public void ToMainMenu(){
 		SceneManager.LoadScene ("MainMenu");
 	}

@@ -5,14 +5,12 @@
       <File FileName="Assets\Scripts\GameManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\MainMenu.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Credits.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Sheep.cs" Line="5" Column="30" />
-      <File FileName="Assets\Scripts\Animal.cs" Line="125" Column="2" />
-      <File FileName="Assets\Scripts\Wolf.cs" Line="8" Column="9" />
+      <File FileName="Assets\Scripts\Sheep.cs" Line="20" Column="23" />
+      <File FileName="Assets\Scripts\Animal.cs" Line="122" Column="6" />
+      <File FileName="Assets\Scripts\Wolf.cs" Line="32" Column="23" />
       <File FileName="Assets\Scripts\SaveManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\HighScores.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\LoadManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\ParticleSystemDestroyer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\AnimalList.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CameraController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\SavedData.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\HowToPlay.cs" Line="1" Column="1" />

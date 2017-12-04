@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Sheep : Animal {
+	
 	private AudioClip bleatSound;
-
 
 	void Start(){
 		ID = 1;
@@ -46,38 +46,26 @@ public class Sheep : Animal {
 	}
 
 	IEnumerator Pee(){
-
-
+		PeeTimer = Random.Range (20, 40);
 		IsWalking = false;
 		Anim.SetBool ("Walking", false);
 		Anim.SetBool ("SheepPee", true);
-
-
 		yield return new WaitForSeconds (1.2f);
-
 		Anim.SetBool ("SheepPee", false);
 		Anim.SetBool ("Walking", true);
-		PeeTimer = Random.Range (20, 40);
 		IsWalking = true;
 	}
 	IEnumerator Sleep(){
-
-
+		SleepTimer = Random.Range (40, 60);
 		IsWalking = false;
 		Anim.SetBool ("Walking", false);
 		Anim.SetBool ("SheepSleep", true);
-
-
 		yield return new WaitForSeconds (10f);
-		Anim.SetBool ("SheepSleep", false);
 		Anim.SetBool ("SheepWakeUp", true);
-
-
+		Anim.SetBool ("SheepSleep", false);
 		yield return new WaitForSeconds (1.2f);
 		Anim.SetBool ("SheepWakeUp", false);
 		Anim.SetBool ("Walking", true);
-
-		SleepTimer = Random.Range (40, 60);
 		IsWalking = true;
 	}
 

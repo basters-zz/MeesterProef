@@ -12,9 +12,7 @@ public class HowToPlay : MonoBehaviour {
 		controlsPanel = transform.GetChild (0).gameObject;
 		rulesPanel = transform.GetChild (1).gameObject;
 		differencePanel = transform.GetChild (2).gameObject	;
-
 	}
-
 	public void ActivateRulesPanel(){
 		controlsPanel.SetActive (false);
 		rulesPanel.SetActive (true);

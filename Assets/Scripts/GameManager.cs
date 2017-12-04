@@ -15,10 +15,8 @@ public class GameManager : MonoBehaviour {
 
 	int totalDayCount;
 	int totalScore;
-
 	int wolvesAlive;
 	int sheepsAlive;
-
 	int lostScore;
 	int sheepLost;
 
@@ -40,11 +38,9 @@ public class GameManager : MonoBehaviour {
 
 	GameObject nightSwitchPanel;
 	Color colorNightSwitch;
+
 	bool startDay;
 	bool endDay;
-
-
-
 	bool gamePaused;
 
 	//These variables are used to figure out how many of each animal should be spawned
@@ -72,12 +68,12 @@ public class GameManager : MonoBehaviour {
 	List<int> highScoreList = new List<int> ();
 	List<GameObject> allAnimals = new List<GameObject>();
 	List<GameObject> deathListAnimals = new List<GameObject>();
+
 	GameObject sheepPrefab;
 	GameObject wolfPrefab;
 	// Use this for initialization
 	void Start () {
 		Time.timeScale = 1;
-
 		sheepPrefab = Resources.Load ("Prefabs/Sheep") as GameObject;
 		wolfPrefab = Resources.Load ("Prefabs/Wolf") as GameObject;
 		sheepSelector = Resources.Load ("Prefabs/SheepSelected") as GameObject;
@@ -93,7 +89,6 @@ public class GameManager : MonoBehaviour {
 		deathScreen.SetActive (false);
 		pauseScreen.SetActive (false);
 		skipDayScreen.SetActive (false);
-
 		lostScore = 0;
 		totalDayCount = 1;
 		wolvesAlive = 0;
@@ -103,7 +98,6 @@ public class GameManager : MonoBehaviour {
 		cycleMins = 10;
 		cycleCalc = 0.1f / cycleMins * 1;
 		nightCountDown = 300f;
-
 		nightTimer = 5;
 		dayTimer = 5;
 		startRotDirectionalLight = new Vector3 (0, -30, -1.525f);
@@ -117,17 +111,13 @@ public class GameManager : MonoBehaviour {
 		endDay = false;
 		colorNightSwitch = new Color (0,0,0,0);
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera");
-
-
 		losses.SetActive (false);
 		this.GetComponent<LoadManager>().LoadData (highScoreList);
-	
 		explosion = Resources.Load ("Particles/PlasmaExplosion") as GameObject;
 		StartCoroutine (DefeatChecker());
 		StartCoroutine (KillAnimals ());
 		clockSeconds = (int)nightCountDown;
 	}
-	
 	// Update is called once per frame
 	void Update () {
 		StatTracker ();
@@ -137,76 +127,55 @@ public class GameManager : MonoBehaviour {
 		SelectedAnimals ();
 		Pause ();
 		Clock ();
-		//CheckHighScores ();
-		//GetComponent<LoadManager> ().LoadData (highScoreList);
-
-	
-
-		Debug.Log (sheepsAlive);
-		Debug.Log (wolvesAlive);
 
 		if(gamePaused == false){
 			mainCam.GetComponent<CameraController> ().CameraControlls ();
 		}
-
-
+			
 		//Temp score Testers
 		if(Input.GetKeyDown(KeyCode.F)){
 			highScoreList.Add (Random.Range(0, 166));
-
-
 		}
 		if(Input.GetKeyDown(KeyCode.G)){
 			highScoreList.Sort ();
 			highScoreList.Reverse ();
-
 		}
 		if(Input.GetKeyDown(KeyCode.K)){
 			RemoveSheep ();
-
 		}
 		if(clockSeconds <= 0){
 			clockMinutes -= 1;
 			clockSeconds = 60;
 		}
-			
-
 	}
 	void Clock(){
-
 		while(clockSeconds > 60){
 			clockMinutes += 1;
 			clockSeconds -= 60;
 		}
-
 		if(clockSeconds >= 10){
 			clockObj.GetComponent<InputField>().text = "Time: " + clockMinutes + ":" + (int)clockSeconds;
 		}
 		else if(clockSeconds < 10){
 			clockObj.GetComponent<InputField>().text = "Time: " + clockMinutes + ":0" + (int)clockSeconds;
 		}
-	
 	}
-
 	void SetClock(){
 		clockSeconds = (int)nightCountDown;
 	}
-
-
-
+		
 	void CheckDaySkippable(){
 		if (wolvesAlive == 0 && !endDay && !startDay) {
 			skipDayScreen.SetActive (true);
-		} else {
+		} 
+		else {
 			skipDayScreen.SetActive (false);
 		}
 	}
-
 	void SelectedAnimals(){
 		if(Input.GetMouseButtonDown(1)){
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if(Physics.Raycast(ray, out hit))
-			{
+			if(Physics.Raycast(ray, out hit)){
 				if(hit.collider.CompareTag("Animal")){
 
 					if(hit.collider.GetComponent<Animal>().IsSelected == false){
@@ -225,18 +194,7 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 		}
-
-
-
-	/*	foreach (var animal in allAnimals) {
-			if(animal.GetComponent<Animal>().IsSelected == true){
-
-			}
-		}*/
 	}
-
-
-
 	void DayTimeCalculator(){
 		float extraSeconds = 0;
 		float extraMinutesCycle = 0;
@@ -258,6 +216,7 @@ public class GameManager : MonoBehaviour {
 		AnimalClickable ();
 		Time.timeScale = 1;
 	}
+
 	void AnimalClickable(){
 		if (gamePaused) {
 			foreach (GameObject animal in allAnimals) {
@@ -285,9 +244,7 @@ public class GameManager : MonoBehaviour {
 	public void Restart(){
 		AddScoreToHighScores ();
 		GetComponent<SaveManager>().SaveData (highScoreList);
-
 		SceneManager.LoadScene ("GameScene");
-
 	}
 	public void ToMainMenu(){
 		AddScoreToHighScores ();
@@ -296,71 +253,48 @@ public class GameManager : MonoBehaviour {
 		SceneManager.LoadScene ("MainMenu");
 	}
 	void DayNightCycle(){
-		if (!gamePaused) {
+		if (!gamePaused){
 			directionalLight.Rotate (cycleCalc, 0, 0);
 			nightCountDown -= Time.deltaTime;
 			clockSeconds -= Time.deltaTime;
 		}
 	}
-
 	void AddScoreToHighScores(){
-
 		highScoreList.Add (totalScore);
-		Debug.Log (highScoreList.Count);
-		/*foreach (int score in highScoreList) {
-			Debug.Log ("gas");
-			if (totalScore > score) {
-
-				highScoreList.Sort ();
-				highScoreList.Reverse ();
-				highScoreList.RemoveAt (5);
-				Debug.Log ("CHECK");
-				return;
-			} else {
-				//Continue Checking
-
-			}
-		}*/
 		return;
 	}
-		
-		
-
 	public void SkipDay(){
 		nightCountDown = 0;
 	}
-
 	void DayNightSwitch(){
-		if (!gamePaused) {
-			if (nightCountDown > 0f) {
+		if (!gamePaused){
+			if (nightCountDown > 0f){
 				DayNightCycle ();
 				endDay = false;
-				if (dayTimer != 5f) {
+				if (dayTimer != 5f){
 					dayTimer = 5f;
 				}
 				if (nightTimer != 5f) {
 					nightTimer = 5f;
 				}
-			} else if (nightCountDown <= 0f && startDay != true) {
+			} 
+			else if (nightCountDown <= 0f && startDay != true){
 				endDay = true;
 				nightTimer -= Time.deltaTime;
 			}
 
-			if (nightTimer <= 0) {
-			
+			if (nightTimer <= 0){
 				endDay = false;
 				startDay = true;
 				dayTimer -= Time.deltaTime;
-
 			}
 
 			//Start making it day again
-			if (dayTimer > 0 && startDay == true) {
-
-
+			if (dayTimer > 0 && startDay == true){
 				directionalLight.rotation = Quaternion.Euler (startRotDirectionalLight);
 
-			} else if (dayTimer <= 0) {
+			} 
+			else if (dayTimer <= 0){
 				AddScoreToHighScores ();
 				GetComponent<SaveManager>().SaveData (highScoreList);
 				totalDayCount += 1;
@@ -370,24 +304,23 @@ public class GameManager : MonoBehaviour {
 				SpawnAnimals ();
 				SetClock ();
 				startDay = false;
-
 			}
 
-			if (startDay == true) {
+			if (startDay == true){
 				colorNightSwitch.a -= 0.025f;
 				nightSwitchPanel.GetComponent<Image> ().color = colorNightSwitch;
-			} else if (endDay == true) {
+			} 
+			else if (endDay == true){
 				colorNightSwitch.a += 0.025f;
 				nightSwitchPanel.GetComponent<Image> ().color = colorNightSwitch;
 			} 
 		}
 
 	}
-
 	void StatTracker(){
 		wolvesAlive = 0;
 		sheepsAlive = 0;
-		foreach (var animal in allAnimals) {
+		foreach (var animal in allAnimals){
 			if(animal.GetComponent<Animal>().ID == 0){
 				wolvesAlive += 1;
 			}
@@ -395,41 +328,30 @@ public class GameManager : MonoBehaviour {
 				sheepsAlive += 1;
 			}
 		}
-		
 		return;
 	}
-
 	void RemoveSheep(){
-
 		int sheepsToKill = 0;
-
 		foreach(GameObject animal in allAnimals){
-			if (animal.GetComponent<Animal> ().ID == 0) {
+			if (animal.GetComponent<Animal> ().ID == 0){
 				sheepsToKill += animal.GetComponent<Wolf> ().KillAmount;
 			}
 		}
-		while (sheepsToKill > 0) {
-			foreach (GameObject animal in allAnimals) {
-				Debug.Log (sheepsToKill);
-				if (animal.GetComponent<Animal> ().ID == 1) {
-					if (sheepsToKill > 0) {
+		while (sheepsToKill > 0){
+			foreach (GameObject animal in allAnimals){
+				if (animal.GetComponent<Animal> ().ID == 1){
+					if (sheepsToKill > 0){
 						animal.GetComponent<Animal> ().IsAlive = false;
 						sheepLost += 1;
 						lostScore += 2;
 						NegativePoints ();
 						sheepsToKill -= 1;
-
-
-
 					}
 
 				}
 			}
 		}
 		return;
-
-
-
 	}
 	//Check how many animals are left and display it on screen
 	void OnScreenDisplay(){
@@ -440,13 +362,10 @@ public class GameManager : MonoBehaviour {
 	}
 	void PositivePoints(){
 		totalScore += 5;
-
 	}
-
 	void NegativePoints(){
 		totalScore -= 2;
 	}
-
 	//Spawn animals
 	void SpawnAnimals(){
 		totalWolfSpawn = totalAnimalSpawn / Random.Range (2, 5);
@@ -465,7 +384,6 @@ public class GameManager : MonoBehaviour {
 			totalWolfSpawn -= 1;
 		}
 		return;
-
 	}
 	//Chage spawn position of the animals
 	void ChangeSpawnPos(){
@@ -484,17 +402,11 @@ public class GameManager : MonoBehaviour {
 		GameObject tempWolf = Instantiate (wolfPrefab, spawnPosition, tempRot);
 		allAnimals.Add (tempWolf);
 	}
-	
-
-
-
 	//Build Spawn Area
 	void OnDrawGizmosSelected(){
 		Gizmos.color = new Color (1,0,0.5f,0.4f);
 		Gizmos.DrawCube (centerSpawnArea, sizeSpawnArea);
 	}
-
-
 	IEnumerator DefeatChecker(){
 		yield return new WaitForSeconds (0.1f);
 
@@ -503,21 +415,16 @@ public class GameManager : MonoBehaviour {
 			GetComponent<SaveManager>().SaveData (highScoreList);
 			gamePaused = true;
 			Time.timeScale = 0;
-			Debug.Log ("MEOOWWOWW");
 			AnimalClickable ();
 			deathScreen.SetActive (enabled);
-
 		}
 		StartCoroutine(DefeatChecker());
-
 	}
 	IEnumerator KillAnimals()
 	{
 		yield return new WaitForSeconds (0.1f);
 		foreach (var animal in allAnimals) {
 			if(animal.GetComponent<Animal>().IsAlive == false){
-				Debug.Log (animal.GetComponent<Animal>().ID == 0);
-				Debug.Log ("test");
 				if(animal.GetComponent<Animal>().ID == 0){
 					PositivePoints ();
 					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
@@ -527,26 +434,17 @@ public class GameManager : MonoBehaviour {
 					NegativePoints ();
 					Instantiate(explosion, animal.transform.position, animal.transform.rotation);
 					deathListAnimals.Add (animal);
-
 				}
-
 			}
-
-
-
 		}
 		GameObject tempAnimal;
-		foreach (var animal in deathListAnimals) {
+		foreach (var animal in deathListAnimals){
 			tempAnimal = animal;
 			allAnimals.Remove(animal);
 			Destroy (tempAnimal.gameObject);
 		}
-
 		deathListAnimals.Clear ();
 		StartCoroutine (KillAnimals());
-
-
-
 	}
 	IEnumerator ShowLosses(){
 		losses.SetActive (true);
@@ -556,6 +454,4 @@ public class GameManager : MonoBehaviour {
 		sheepLost = 0;
 		lostScore = 0;
 	}
-
-
 }

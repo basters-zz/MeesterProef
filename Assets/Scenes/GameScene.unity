@@ -2786,7 +2786,7 @@ GameObject:
   - component: {fileID: 403875733}
   - component: {fileID: 403875732}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Losses
   m_TagString: NightPanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3633,7 +3633,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: YOU LOST FSGSDSA
+  m_Text: 
 --- !u!222 &515170164
 CanvasRenderer:
   m_ObjectHideFlags: 0

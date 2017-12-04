@@ -27,7 +27,6 @@ public class SaveManager : MonoBehaviour {
 		SaveContent.HSList = newScore;
 		SaveContent.HSList.Sort ();
 		SaveContent.HSList.Reverse ();
-		//newScore.AddRange (SaveContent.HSList);
 		binary.Serialize (fStream, SaveContent);
 		fStream.Close ();
 		return;
